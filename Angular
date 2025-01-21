@@ -1,0 +1,533 @@
+Angular is the new front-end framework
+Angular is completely written in Typescript and meets the ECMAScript 6 specification.
+
+10. State Management
+Store/State Management: Although Angular doesn’t come with a built-in state management system like Redux in React, you can use libraries like NgRx or Akita to manage complex state.
+
+Why NodeJs is Required
+You must install NodeJs and the NPM package manager to develop an Angular application. Note that neither of them is required on the production server.
+Angular uses Node.js for its build and development tools. For example, the angular compiler must transpile the TypeScript code into JavaScript. It also needs to perform steps like minification, bundling, and build optimization of the final code. To run all these tools, it needs Node.js.
+NodeJs also spins up a lightweight web server. Angular uses it to host the application during development.
+
+NPM Package Manager (NPM)
+Angular uses the Node Package Manager to install and manage its dependencies.
+
+The Angular CLI helps us quickly create an application with all the configuration files and packages in one command. It also helps us add features (components, directives, services, etc) to existing Angular applications.
+
+The Angular CLI creates the Angular Application and uses Typescript, Webpack ( for Module bundling), Karma ( for unit testing), Protractor ( for end-to-end testing). 
+
+ng new GettingStarted
+
+The above command compiles the Angular application and starts the development server. The server keeps a watch on our project folder. If you make any changes in the code, it recompiles the project.
+
+The default port for the development server is 4200. 
+
+
+angular.json: This is the configuration file for Angular CLI.
+
+
+
+
+This code snippet represents an **Angular Module** declaration using the `@NgModule` decorator, which is a core part of the Angular framework. It defines the metadata for an Angular module. Let’s break it down:
+
+### **1. `@NgModule` Decorator**
+The `@NgModule` decorator is used to define an Angular module, where the module is a container for various components, services, directives, pipes, and other Angular functionality.
+
+### **2. `declarations`**
+- The `declarations` array is used to declare the components, directives, and pipes that belong to this module.
+- In this case, `AppComponent` is declared in the module, meaning it is part of this module and can be used within its templates.
+  ```typescript
+  declarations: [AppComponent]
+  ```
+
+### **3. `imports`**
+- The `imports` array is used to import other Angular modules that the current module needs. These could be core Angular modules or feature modules that provide functionality such as routing, forms, HTTP requests, etc.
+- In this example:
+  - `BrowserModule`: This is required for any Angular application that runs in a browser. It provides essential services for rendering and running the application in the browser.
+  - `AppRoutingModule`: This is likely a custom module that handles routing configuration for the application (i.e., defining routes and associated components).
+  ```typescript
+  imports: [
+    BrowserModule,      // Angular module for browser environments
+    AppRoutingModule    // Custom routing module for app routes
+  ]
+  ```
+
+### **4. `providers`**
+- The `providers` array is used to define the services or other dependencies that should be available application-wide or within the module.
+- In this case, the `providers` array is empty, meaning no additional services or providers are being injected globally at this module level.
+  ```typescript
+  providers: []
+  ```
+
+### **5. `bootstrap`**
+- The `bootstrap` array specifies the component that will be bootstrapped (i.e., initialized) as the root component of the application.
+- Here, `AppComponent` is the root component, meaning it will be the first component to be displayed in the browser when the application starts.
+  ```typescript
+  bootstrap: [AppComponent]
+  ```
+
+### **Summary**
+The given code defines the root module of an Angular application with the following configuration:
+- **Declarations**: `AppComponent` is declared as a component in this module.
+- **Imports**: `BrowserModule` (for browser functionality) and `AppRoutingModule` (for routing functionality) are imported.
+- **Providers**: No additional services or providers are included.
+- **Bootstrap**: The `AppComponent` will be the root component that Angular uses to start the application.
+
+This is a basic setup for an Angular application where the root module initializes and sets up the foundation for the rest of the app.
+
+
+
+platformBrowserDynamic() is a factory method that prepares the Angular application to run in a browser environment.
+bootstrapModule(AppModule) starts the app by using the root module (AppModule), which tells Angular how to initialize and configure the application.
+
+
+Bootstrapping is the process of initializing or loading our Angular application.
+
+Angular takes the following steps to load our first view.
+
+Loads Index.html
+Loads Angular & Third-party libraries & Application
+Executes application entry point (main.ts)
+Load & execute Root Module (app.module.ts)
+Executes the Root Component (app.component.ts)
+Displayes the template (app.component.html)
+
+
+
+Understanding Renderer2 in Angular
+Renderer2 is an Angular service that provides a way to safely and consistently manipulate DOM elements. It abstracts direct DOM manipulation and ensures that Angular applications remain compatible with different rendering environments, such as:
+
+Web browsers
+Server-side rendering (SSR)
+Web workers
+By using Renderer2, you avoid directly accessing the DOM (e.g., through document or element.nativeElement), which helps maintain the application's platform independence and security.
+
+
+
+
+Here’s a practical example to demonstrate how **pure** and **impure** pipes behave when working with objects or arrays.
+
+---
+
+### Scenario: Filtering an Array
+
+We’ll create a **pure pipe** and an **impure pipe** to filter a list of active items in an array. Then, we’ll modify the array in two ways:  
+1. **Changing the reference** (replacing the array).  
+2. **Mutating the array in place** (modifying the contents without changing the reference).
+
+---
+
+### Step 1: Create the Pipes
+
+#### Pure Pipe (Default)
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'pureFilter'
+})
+export class PureFilterPipe implements PipeTransform {
+  transform(items: any[]): any[] {
+    return items.filter(item => item.active);
+  }
+}
+```
+
+#### Impure Pipe
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'impureFilter',
+  pure: false
+})
+export class ImpureFilterPipe implements PipeTransform {
+  transform(items: any[]): any[] {
+    return items.filter(item => item.active);
+  }
+}
+```
+
+---
+
+### Step 2: Use the Pipes in the Template
+
+```html
+<h3>Pure Pipe</h3>
+<ul>
+  <li *ngFor="let item of items | pureFilter">{{ item.name }}</li>
+</ul>
+
+<h3>Impure Pipe</h3>
+<ul>
+  <li *ngFor="let item of items | impureFilter">{{ item.name }}</li>
+</ul>
+
+<button (click)="addItem()">Add Item</button>
+<button (click)="replaceArray()">Replace Array</button>
+```
+
+---
+
+### Step 3: Define the Component
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html'
+})
+export class AppComponent {
+  items = [
+    { name: 'Item 1', active: true },
+    { name: 'Item 2', active: false },
+    { name: 'Item 3', active: true }
+  ];
+
+  addItem() {
+    // Mutate the existing array (no reference change)
+    this.items.push({ name: 'Item 4', active: true });
+  }
+
+  replaceArray() {
+    // Replace the array (reference changes)
+    this.items = [
+      ...this.items,
+      { name: 'Item 5', active: false }
+    ];
+  }
+}
+```
+
+---
+
+### Behavior of Pure vs. Impure Pipes
+
+1. **Initial State**:
+   - Both pipes display:
+     ```
+     Item 1
+     Item 3
+     ```
+
+2. **Click `Add Item` (Mutate Array)**:
+   - **Pure Pipe**: No change; still displays:
+     ```
+     Item 1
+     Item 3
+     ```
+   - **Impure Pipe**: Updates and displays:
+     ```
+     Item 1
+     Item 3
+     Item 4
+     ```
+
+3. **Click `Replace Array` (Change Reference)**:
+   - **Pure Pipe**: Updates and displays:
+     ```
+     Item 1
+     Item 3
+     Item 4
+     ```
+   - **Impure Pipe**: Updates similarly:
+     ```
+     Item 1
+     Item 3
+     Item 4
+     ```
+
+---
+
+### Why This Happens
+
+- **Pure Pipe**: Runs only when the **reference** of the `items` array changes.
+- **Impure Pipe**: Runs on **every change detection cycle**, including internal changes like `push`.
+
+---
+
+### Key Takeaways
+
+- Use **pure pipes** for better performance when working with immutable data.
+- Use **impure pipes** sparingly for dynamic, mutable data.
+
+
+
+### **Flow Explanation**: When `Send Data to Parent` is clicked
+
+Let’s break down the sequence of events step by step when someone clicks the button in the child component.
+
+---
+
+### 1. **User Clicks the Button**
+
+```html
+<button (click)="sendData()">Send Data to Parent</button>
+```
+
+- The `(click)` event is a DOM event bound to the `sendData` method in the child component.
+- When the button is clicked, the `sendData()` method is invoked in the **child component**.
+
+---
+
+### 2. **Child Component Emits an Event**
+
+```typescript
+@Output() dataSent = new EventEmitter<string>();
+
+sendData() {
+  const message = 'Hello from Child!';
+  this.dataSent.emit(message); // Emits the event with the message
+}
+```
+
+- The `sendData()` method calls `this.dataSent.emit(message)`.
+- This emits a custom event (`dataSent`) with the value `'Hello from Child!'`.
+
+---
+
+### 3. **Parent Component Listens to the Event**
+
+In the parent component template, the event is captured using **event binding**:
+
+```html
+<app-child (dataSent)="handleData($event)"></app-child>
+```
+
+- The parent listens to the `dataSent` event emitted by the child.
+- When the event is triggered, the parent’s `handleData` method is called, and the emitted data is passed as an argument.
+
+---
+
+### 4. **Parent Component Handles the Event**
+
+```typescript
+handleData(data: string) {
+  this.receivedMessage = data; // Update the parent’s property with the received data
+}
+```
+
+- The `handleData` method in the parent component is invoked with the data (`'Hello from Child!'`).
+- The `receivedMessage` property is updated with the received value.
+
+---
+
+### 5. **Parent Component's Template Updates**
+
+```html
+<p>Received Message: {{ receivedMessage }}</p>
+```
+
+- Angular’s **change detection** mechanism automatically updates the view.
+- The new value of `receivedMessage` is displayed in the parent’s template.
+
+---
+
+### **Flow Diagram**
+
+1. **User Action**: Button Click in Child  
+   ↓  
+2. **Child Component**: `sendData()` method is called  
+   ↓  
+3. **Child Emits Event**: `dataSent.emit('Hello from Child!')`  
+   ↓  
+4. **Parent Listens**: `(dataSent)="handleData($event)"`  
+   ↓  
+5. **Parent Handles Data**: `handleData` updates `receivedMessage`  
+   ↓  
+6. **View Updates**: Parent template reflects the new data  
+
+---
+
+### **Summary of Flow**
+
+1. User clicks the button.
+2. `sendData()` emits a custom event (`dataSent`).
+3. The parent component listens to the `dataSent` event.
+4. The parent’s `handleData` method processes the data.
+5. Angular updates the parent component’s view automatically.
+
+
+
+
+### **Three Ways for Parent Component to Interact with Child Component in Angular**
+
+---
+
+### 1. **Parent Listens to Child Event (`@Output` with EventEmitter)**  
+
+This approach involves using **`@Output`** in the child component to emit events that the parent listens to.
+
+#### **Flow**:
+- Child emits an event using `EventEmitter`.
+- Parent listens to the event and handles it in its own component logic.
+
+#### **Example**:
+
+**Child Component** (`child.component.ts`):
+```typescript
+import { Component, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<button (click)="sendData()">Send Data to Parent</button>`,
+})
+export class ChildComponent {
+  @Output() dataSent = new EventEmitter<string>();
+
+  sendData() {
+    this.dataSent.emit('Hello from Child!');
+  }
+}
+```
+
+**Parent Component** (`parent.component.html`):
+```html
+<app-child (dataSent)="handleData($event)"></app-child>
+<p>Received Message: {{ receivedMessage }}</p>
+```
+
+**Parent Component Logic** (`parent.component.ts`):
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-parent',
+  templateUrl: './parent.component.html',
+})
+export class ParentComponent {
+  receivedMessage: string = '';
+
+  handleData(data: string) {
+    this.receivedMessage = data;
+  }
+}
+```
+
+---
+
+### 2. **Parent Uses a Local Variable to Access the Child**  
+
+This approach allows the parent to interact with the child by accessing it directly via a **template reference variable**.
+
+#### **Flow**:
+- The parent assigns a template reference variable (`#childRef`) to the child component.
+- The parent accesses the child component’s public methods or properties via the reference.
+
+#### **Example**:
+
+**Child Component** (`child.component.ts`):
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<p>Child Component</p>`,
+})
+export class ChildComponent {
+  message: string = 'Hello from Child!';
+
+  greet() {
+    return 'Hello, Parent!';
+  }
+}
+```
+
+**Parent Component** (`parent.component.html`):
+```html
+<app-child #childRef></app-child>
+<button (click)="interactWithChild(childRef)">Interact with Child</button>
+```
+
+**Parent Component Logic** (`parent.component.ts`):
+```typescript
+import { Component } from '@angular/core';
+import { ChildComponent } from '../child/child.component';
+
+@Component({
+  selector: 'app-parent',
+  templateUrl: './parent.component.html',
+})
+export class ParentComponent {
+  interactWithChild(child: ChildComponent) {
+    console.log(child.message); // Access child property
+    console.log(child.greet()); // Call child method
+  }
+}
+```
+
+---
+
+### 3. **Parent Uses `@ViewChild` to Get Reference to Child**
+
+This approach involves using **`@ViewChild`** to get a programmatic reference to the child component in the parent.
+
+#### **Flow**:
+- Parent declares a `@ViewChild` property to reference the child component.
+- Parent interacts with the child component's methods or properties directly in the class.
+
+#### **Example**:
+
+**Child Component** (`child.component.ts`):
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<p>Child Component</p>`,
+})
+export class ChildComponent {
+  message: string = 'Hello from Child!';
+
+  greet() {
+    return 'Hello, Parent!';
+  }
+}
+```
+
+**Parent Component** (`parent.component.html`):
+```html
+<app-child></app-child>
+<button (click)="interactWithChild()">Interact with Child</button>
+```
+
+**Parent Component Logic** (`parent.component.ts`):
+```typescript
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { ChildComponent } from '../child/child.component';
+
+@Component({
+  selector: 'app-parent',
+  templateUrl: './parent.component.html',
+})
+export class ParentComponent implements AfterViewInit {
+  @ViewChild(ChildComponent) child!: ChildComponent;
+
+  ngAfterViewInit() {
+    console.log('Child message:', this.child.message);
+  }
+
+  interactWithChild() {
+    console.log(this.child.greet());
+  }
+}
+```
+
+---
+
+### **Comparison of Methods**
+
+| **Method**                         | **Use Case**                                                | **Pros**                                         | **Cons**                                            |
+|------------------------------------|------------------------------------------------------------|-------------------------------------------------|----------------------------------------------------|
+| **Listens to Child Event**         | Child needs to notify parent about an event or data.        | Decouples parent and child components.         | Limited to event-based communication.             |
+| **Local Variable**                 | Simple one-time access to child properties/methods.         | Easy to use in templates.                      | Doesn't work in class logic directly.             |
+| **`@ViewChild`**                   | Parent needs programmatic control over the child component. | Full control over child properties/methods.    | Strong coupling; requires lifecycle hook (`ngAfterViewInit`). |
+
+---
+
+### Summary
+
+- **Listens to Child Event**: Best for event-driven communication.
+- **Local Variable**: Simple and straightforward for basic interaction.
+- **`@ViewChild`**: Best for advanced, programmatic control over child components.
