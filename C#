@@ -1,0 +1,3080 @@
+ Input devices have their own memory in the computer called Input Buffer. All instructions from input devices are dumped into this memory, and if the program wants to read something, it will read from the input buffer.So, whatever we type using the keyboard will be stored in the input buffer, and the program reads the input from the input buffer.
+ 
+Compiler-Interpreted Languages:
+
+Languages like Java, .NET (C#), and Python involve a mix of compilation and interpretation:
+Java: The source code is first compiled into bytecode (an intermediate representation) using the Java compiler. The Java Virtual Machine (JVM) then interprets or just-in-time (JIT) compiles this bytecode for execution.
+.NET (C#): Similar to Java, C# code is compiled into Intermediate Language (IL) and then executed by the .NET runtime (CLR), which can either interpret or JIT compile the IL.
+ 
+ C is mainly used for embedded system programming. The best gaming library is available in C++.
+ 
+ Java and .NET languages are used to develop enterprise-level applications for example web applications like ICICI Bank, IRCTC, Facebook, etc.
+ 
+ In the 1st compilation, the source code is compiled by the respective language compiler and generates the intermediate code which is known as MSIL (Microsoft Intermediate Language) or IL (Intermediate language code), or Managed Code.
+In the 2nd compilation, MSIL is converted into Native code (native code means code specific to the Operating system so that the code is executed by the Operating System) and this is done by CLR.
+
+JIT stands for the Just-in-Time compiler. It is the component of CLR that is responsible for converting MSIL code into Native Code.
+
+class cannot be inherited because it is a static class
+
+The String Intern in C# is a process that uses the same memory location if the value is the same.
+They made Strings Immutable for Thread Safety. 
+
+The static keyword allows you to define members (fields, methods, properties) that are shared among all instances of a class.
+A static member is tied to the type itself, not an individual object.
+Used to define singleton classes, where only one instance of a class should exist.
+static is used for the single instance or members like configuration settings, logging mechanisms, etc.
+The static keyword is used for a static constructor, which initializes static members of a class.
+Static constructors are executed only once, when the class is accessed for the first time
+
+### Summary of Stack and Heap in .NET:
+
+1. **Stack**:  
+   - Used for static memory allocation.  
+   - Stores value types, function call information, and references to objects.  
+   - Memory is automatically deallocated when the function or block ends.  
+   - Fast but limited in size.  
+
+2. **Heap**:  
+   - Used for dynamic memory allocation.  
+   - Stores objects and data that persist beyond the scope of functions.  
+   - Managed by the Garbage Collector (GC), which frees memory of unused objects.  
+   - Slower but flexible and supports large data.
+
+3. **Differences**:  
+   - **Stack** is faster and auto-managed; **Heap** is slower but more versatile.  
+   - Stack is prone to `StackOverflowException` with excessive recursion, while Heap can face `OutOfMemoryException` or fragmentation.  
+
+4. **Fragmentation in Heap**:  
+   - Dynamic allocation and deallocation create small scattered memory gaps, leading to wasted memory and slower performance.  
+   - The Garbage Collector compacts memory to mitigate fragmentation.
+
+5. **Key Guidelines**:  
+   - Use the stack for small, temporary data like local variables.  
+   - Use the heap for dynamic, persistent data like objects.  
+   - Optimize heap usage to avoid performance bottlenecks.  
+
+This balance between stack and heap is crucial for efficient memory management in .NET programs.
+
+### **Summary: Memory Layout for `string[]` Array**
+
+1. **Stack**:
+   - The **variable `arr`** is stored on the stack. It holds a reference (pointer) to the array object in the heap.
+   - The reference is just a pointer (e.g., `0x123456`) to the location in the heap where the actual array is stored.
+
+2. **Heap**:
+   - The **array object** itself is created in the heap. It is an object that holds references to the actual string values.
+   - Initially, the array holds **null references**, but when values like `"Hello"` and `"World"` are assigned, new **string objects** are created in the heap.
+   - These string objects are stored at specific memory locations (e.g., `0xABC001` for `"Hello"` and `0xDEF002` for `"World"`), and the array elements hold references to these string objects.
+
+3. **Key Points**:
+   - The array itself is a **reference type** and is allocated in the heap.
+   - The **strings** contained in the array are also reference types, stored in the heap.
+   - The **stack** stores the **reference** to the array object, while the **heap** stores the array's data and the string objects themselves.
+
+This setup demonstrates how both **reference types** and **dynamic memory allocation** work together in the heap, with the stack managing references to these heap-allocated objects.
+
+Abstraction simplifies complex systems by exposing only essential features and hiding internal implementation. In C#, abstraction is typically achieved using abstract classes or interfaces. These allow you to define the structure of methods, leaving the implementation to derived classes.
+
+
+// Abstract class representing a general vehicle
+public abstract class Vehicle
+{
+    public abstract void Start(); // Abstract method with no implementation
+}
+
+// Derived class implementing the abstract method
+public class Car : Vehicle
+{
+    public override void Start()
+    {
+        Console.WriteLine("Car is starting");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Vehicle vehicle = new Car();
+        vehicle.Start(); // Only the essential method is exposed
+    }
+}
+
+Encapsulation is the concept of restricting access to the internal state of an object and providing controlled access through methods or properties. It ensures that the internal representation of an object is hidden and prevents direct modification.
+public class BankAccount
+{
+    private decimal balance; // Private field
+
+    // Public method to access the balance
+    public decimal Balance
+    {
+        get { return balance; }
+        private set { balance = value; } // Private setter to control changes
+    }
+
+    // Public method to deposit money
+    public void Deposit(decimal amount)
+    {
+        if (amount > 0)
+        {
+            balance += amount;
+        }
+    }
+
+    // Public method to withdraw money
+    public void Withdraw(decimal amount)
+    {
+        if (amount > 0 && amount <= balance)
+        {
+            balance -= amount;
+        }
+    }
+}
+### **Class and Objects: Layman's View**
+
+- **Class**: Think of a class as a **blueprint** or **template** for creating objects. For example, a "Car" class defines properties like color, brand, and methods like "drive."
+  
+- **Object**: An object is an **instance** of that blueprint. For example, your actual "Toyota car" is an object created from the "Car" class blueprint. You can have many cars (objects) but they all follow the same template (class).
+
+A class is like a recipe, and objects are the cakes made from it!
+
+
+A private constructor is used to restrict the instantiation of a class from outside its definition. It is commonly used in the singleton pattern, where you want to ensure only one instance of a class is created. The constructor is marked as private, and the class provides a static method to control access to the single instance, often ensuring lazy initialization. This way, the object can only be accessed via the static method, ensuring no additional instances are created.
+
+public class Singleton
+{
+    private static Singleton instance;
+
+    // Private constructor
+    private Singleton() { }
+
+    public static Singleton GetInstance()
+    {
+        if (instance == null)
+            instance = new Singleton();
+        return instance;
+    }
+}
+
+
+### **Static Constructor**
+- A **static constructor** is used to initialize static members of a class. It is called once when the class is first used and cannot be called directly.
+- **Purpose**: It ensures that static fields are initialized before any instance of the class is created or any static method is accessed.
+  
+**Example**:
+```csharp
+public class Example
+{
+    public static int Count;
+    
+    // Static constructor
+    static Example()
+    {
+        Count = 10; // Initialize static field
+    }
+}
+```
+
+### **Non-Static Constructor**
+- A **non-static constructor** (also known as an instance constructor) is used to initialize instance members when an object is created.
+- **Purpose**: It is called every time a new object of the class is instantiated.
+
+**Example**:
+```csharp
+public class Example
+{
+    public int Count;
+    
+    // Non-static constructor
+    public Example()
+    {
+        Count = 5; // Initialize instance field
+    }
+}
+``` 
+
+### Key Differences:
+- **Static constructor** is called once, only for static members.
+- **Non-static constructor** is called each time a new object is created to initialize instance members.
+
+
+
+Destructors which are also called Finalizers in C# are used to perform any necessary final clean-up when a class instance is being collected by the garbage collector.
+the Destructor in C# is Implicitly Called when the object of the class is destroyed.
+
+A destructor method gets called automatically by the garbage collector when the object of the class is destroyed. So, the point that you need to remember is that the destructor methods are automatically called by the garbage collector.
+
+When will the Object of a Class get Destroyed in C#?
+The object of a class in C# will be destroyed by the garbage collector in any of the following cases
+
+At the end of the program execution, each and every object that is associated with the program will be destroyed by the garbage collector.
+The Implicit calling of the garbage collector occurs sometime in the middle of the program execution provided the memory is full so the garbage collector will identify unused objects of the program and destroys them.
+The Explicit calling of the garbage collector can also be done in the middle of program execution by the programmer with the help of the “Collect()” statement so that if there are any unused objects associated with the program will be destroyed in the middle of the program execution.
+
+Once, the object is unused i.e. it ready for garbage collection, then it is the responsibility of the garbage collector to destroy that unused object and free the memory from the heap.
+
+If you want, then you can also make an explicit call to the garbage collector in the middle of the application execution to destroy the unused object. To do so, we need to call the GC.Collect method as shown in the below example.
+
+A Destructor does not take any modifiers or does not have any parameters.
+
+However, when our application works with unmanaged resources, such as windows, files, and network connections, we should use a destructor to free the memory for those unmanaged resources. When the object is eligible for destruction, the garbage collector runs the Finalize method of the object. 
+
+if our application is using an expensive external resource, then it is recommended to provide an explicit way to release the resources before the garbage collector frees the object. To release the resource, it is recommended to implement a Dispose method of the IDisposable interface that performs the necessary clean-up for the object. So, basically, we need our class to inherit from the IDisposable interface and provide the implementation for the Dispose methods as follows. So, here, please select Implement Interface with Dispose Pattern option as shown in the below image.
+
+
+
+In C#, the **Is-A** and **Has-A** relationships describe different types of associations between objects in object-oriented programming. Here’s an explanation with examples:
+
+---
+
+### **Is-A Relationship (Inheritance)**
+
+The **Is-A** relationship is established using **inheritance**, where a class (child) derives from another class (parent). This relationship reflects a generalization-specialization hierarchy.
+
+- **Definition**: If class `B` derives from class `A`, then `B` is considered to be an `A`.
+- **Implementation**: Use the `:` keyword in C# to define inheritance.
+
+#### Example:
+```csharp
+// Base class
+public class Vehicle
+{
+    public string Make { get; set; }
+    public string Model { get; set; }
+
+    public void Drive()
+    {
+        Console.WriteLine("Driving...");
+    }
+}
+
+// Derived class
+public class Car : Vehicle
+{
+    public int NumberOfDoors { get; set; }
+
+    public void Honk()
+    {
+        Console.WriteLine("Honk! Honk!");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Car myCar = new Car
+        {
+            Make = "Toyota",
+            Model = "Corolla",
+            NumberOfDoors = 4
+        };
+
+        myCar.Drive(); // From Vehicle
+        myCar.Honk();  // From Car
+    }
+}
+```
+
+- **Key Point**: `Car` **is-a** `Vehicle`.
+
+---
+
+### **Has-A Relationship (Composition/Aggregation)**
+
+The **Has-A** relationship is established using **composition** or **aggregation**, where a class contains an instance of another class as a field or property. This represents a "uses" or "ownership" relationship.
+
+- **Definition**: If class `A` has an instance of class `B`, then `A` **has-a** `B`.
+- **Implementation**: Use fields or properties in a class to reference another class.
+
+#### Example:
+```csharp
+public class Engine
+{
+    public int Horsepower { get; set; }
+
+    public void Start()
+    {
+        Console.WriteLine("Engine started.");
+    }
+}
+
+public class Car
+{
+    public string Make { get; set; }
+    public string Model { get; set; }
+    public Engine CarEngine { get; set; } // Has-A relationship
+
+    public Car()
+    {
+        CarEngine = new Engine(); // Composition
+    }
+
+    public void Drive()
+    {
+        CarEngine.Start();
+        Console.WriteLine("Car is driving.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Car myCar = new Car
+        {
+            Make = "Ford",
+            Model = "Focus"
+        };
+
+        myCar.CarEngine.Horsepower = 150;
+        myCar.Drive();
+    }
+}
+```
+
+- **Key Point**: `Car` **has-a** `Engine`.
+
+---
+
+### Differences:
+| Aspect               | Is-A Relationship             | Has-A Relationship             |
+|----------------------|------------------------------|--------------------------------|
+| **Type**            | Inheritance                  | Composition/Aggregation        |
+| **Keyword**         | `:`                          | Field/Property Declaration     |
+| **Example**         | `Car : Vehicle`              | `Car` contains `Engine`        |
+| **Coupling**        | Stronger coupling            | Weaker coupling                |
+| **Flexibility**     | Less flexible                | More flexible                  |
+
+By understanding these relationships, you can better design classes in C# for code reusability, maintainability, and clarity.
+
+
+
+
+
+In object-oriented programming, **composition** and **aggregation** are ways to establish the **Has-A** relationship between classes. Both involve one class containing or referencing another class, but they differ in the nature of the association.
+
+---
+
+### **Composition**
+- **Definition**: A **strong** form of association where the lifecycle of the contained object (part) is tied to the lifecycle of the container (whole).
+- **Key Point**: If the containing object is destroyed, its parts are also destroyed.
+- **Implementation**: Typically involves creating the contained object within the containing class.
+
+#### Example:
+```csharp
+public class Engine
+{
+    public void Start() => Console.WriteLine("Engine started.");
+}
+
+public class Car
+{
+    private Engine engine; // Composition
+
+    public Car()
+    {
+        engine = new Engine(); // Car owns Engine
+    }
+
+    public void StartCar()
+    {
+        engine.Start();
+        Console.WriteLine("Car started.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Car myCar = new Car();
+        myCar.StartCar(); // Starts both car and engine
+    }
+}
+```
+- **Behavior**: When the `Car` object is destroyed, the `Engine` object is also destroyed because it is created and managed internally by `Car`.
+
+---
+
+### **Aggregation**
+- **Definition**: A **weaker** form of association where the lifecycle of the contained object is **independent** of the container.
+- **Key Point**: The contained object can exist independently of the container.
+- **Implementation**: The container class gets a reference to an existing instance of the contained class.
+
+#### Example:
+```csharp
+public class Engine
+{
+    public void Start() => Console.WriteLine("Engine started.");
+}
+
+public class Car
+{
+    public Engine Engine { get; set; } // Aggregation
+
+    public void StartCar()
+    {
+        Engine?.Start();
+        Console.WriteLine("Car started.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Engine myEngine = new Engine(); // Engine created independently
+        Car myCar = new Car { Engine = myEngine }; // Aggregation
+
+        myCar.StartCar(); // Uses the external Engine instance
+    }
+}
+```
+- **Behavior**: The `Engine` object is created outside the `Car` class and can exist independently. Even if `Car` is destroyed, `Engine` can still exist and be used elsewhere.
+
+---
+
+### Key Differences
+
+| Aspect                     | **Composition**                             | **Aggregation**                             |
+|----------------------------|---------------------------------------------|---------------------------------------------|
+| **Dependency**             | Strong dependency; container owns the part | Weak dependency; container references the part |
+| **Lifecycle**              | Contained object's lifecycle depends on the container | Independent lifecycle of contained object  |
+| **Example Relationship**   | `Car has-a Engine (exclusive ownership)`    | `Car has-a Engine (shared or external)`    |
+
+By understanding the distinctions, you can choose the appropriate design for your application depending on how tightly coupled you want the relationship between objects to be.
+
+
+Mnemonic:
+Composition = Contained
+Aggregation = Attached
+
+
+Interfaces in C# are essential for designing and implementing robust, maintainable, and flexible software. Here's a detailed explanation of why interfaces are needed:
+
+---
+
+### 1. **Achieving Abstraction**
+Interfaces allow you to define **what a class must do**, without dictating **how it should do it**. They provide a contract that implementing classes must adhere to, ensuring consistency across different implementations.
+
+#### Example:
+```csharp
+public interface IAnimal
+{
+    void Speak();
+}
+
+public class Dog : IAnimal
+{
+    public void Speak() => Console.WriteLine("Woof!");
+}
+
+public class Cat : IAnimal
+{
+    public void Speak() => Console.WriteLine("Meow!");
+}
+```
+- **Why**: The `IAnimal` interface enforces a consistent behavior (`Speak`) across all animal types, while allowing each class to provide its own implementation.
+
+---
+
+### 2. **Multiple Inheritance**
+C# does not support multiple inheritance with classes, but a class can implement multiple interfaces. This allows a class to inherit behaviors from multiple sources.
+
+#### Example:
+```csharp
+public interface IFlyable
+{
+    void Fly();
+}
+
+public interface IWalkable
+{
+    void Walk();
+}
+
+public class Bird : IFlyable, IWalkable
+{
+    public void Fly() => Console.WriteLine("Flying...");
+    public void Walk() => Console.WriteLine("Walking...");
+}
+```
+- **Why**: Using interfaces, `Bird` can inherit behavior from both `IFlyable` and `IWalkable`, which wouldn't be possible with class inheritance alone.
+
+---
+
+### 3. **Dependency Injection and Decoupling**
+Interfaces decouple code dependencies, making your code more modular and testable. Instead of depending on concrete implementations, you can depend on abstractions.
+
+#### Example:
+```csharp
+public interface ILogger
+{
+    void Log(string message);
+}
+
+public class ConsoleLogger : ILogger
+{
+    public void Log(string message) => Console.WriteLine(message);
+}
+
+public class FileLogger : ILogger
+{
+    public void Log(string message) => System.IO.File.WriteAllText("log.txt", message);
+}
+
+public class Application
+{
+    private readonly ILogger _logger;
+
+    public Application(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void Run()
+    {
+        _logger.Log("Application is running");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Using ConsoleLogger
+        ILogger consoleLogger = new ConsoleLogger();
+        Application appWithConsoleLogger = new Application(consoleLogger);
+        appWithConsoleLogger.Run();
+
+        // Using FileLogger
+        ILogger fileLogger = new FileLogger();
+        Application appWithFileLogger = new Application(fileLogger);
+        appWithFileLogger.Run();
+    }
+}
+```
+- **Why**: You can inject `ConsoleLogger` or `FileLogger` into the `Application` class without changing its code, making it easy to switch implementations or mock dependencies in unit tests.
+
+---
+
+### 4. **Enabling Polymorphism**
+Interfaces are fundamental for achieving polymorphism, where different objects can be treated as instances of the same base type.
+
+#### Example:
+```csharp
+public void MakeAnimalSpeak(IAnimal animal)
+{
+    animal.Speak();
+}
+
+IAnimal dog = new Dog();
+IAnimal cat = new Cat();
+
+MakeAnimalSpeak(dog); // Woof!
+MakeAnimalSpeak(cat); // Meow!
+```
+- **Why**: The `MakeAnimalSpeak` method can accept any `IAnimal` implementation, making it highly flexible and extensible.
+
+---
+
+### 5. **Facilitating Testing**
+Interfaces make it easier to write unit tests by allowing you to mock or stub dependencies.
+
+#### Example:
+```csharp
+public interface IDatabase
+{
+    void Save(string data);
+}
+
+public class Application
+{
+    private readonly IDatabase _database;
+
+    public Application(IDatabase database)
+    {
+        _database = database;
+    }
+
+    public void SaveData(string data)
+    {
+        _database.Save(data);
+    }
+}
+
+// Test with a mock implementation
+public class MockDatabase : IDatabase
+{
+    public void Save(string data) => Console.WriteLine($"Mock Save: {data}");
+}
+
+class Program
+{
+    static void Main()
+    {
+        IDatabase mockDb = new MockDatabase();
+        Application app = new Application(mockDb);
+        app.SaveData("Test Data"); // Mock Save: Test Data
+    }
+}
+```
+- **Why**: By depending on the `IDatabase` interface, you can easily swap out the real database implementation for a mock one during testing.
+
+---
+
+### 6. **Supporting Plugins and Extensibility**
+Interfaces allow you to design systems where new features or plugins can be added without modifying existing code.
+
+#### Example:
+```csharp
+public interface IPlugin
+{
+    void Execute();
+}
+
+public class PluginA : IPlugin
+{
+    public void Execute() => Console.WriteLine("PluginA Executed");
+}
+
+public class PluginB : IPlugin
+{
+    public void Execute() => Console.WriteLine("PluginB Executed");
+}
+```
+- **Why**: Adding new plugins only requires implementing the `IPlugin` interface without altering existing code.
+
+---
+
+### Summary of Benefits Interface
+| Feature                     | Description                                                 |
+|-----------------------------|-------------------------------------------------------------|
+| **Abstraction**             | Define behavior without implementation details.             |
+| **Multiple Inheritance**    | Combine behaviors from multiple interfaces.                 |
+| **Decoupling**              | Reduce dependency on specific implementations.              |
+| **Polymorphism**            | Treat different implementations uniformly.                  |
+| **Testability**             | Mock dependencies easily for testing.                      |
+| **Extensibility**           | Add new features without modifying existing code.           |
+
+By using interfaces wisely, you can create clean, scalable, and testable code!
+
+
+
+Reducing dependency on specific implementations in C# involves designing code that depends on **abstractions** (e.g., interfaces) rather than **concrete classes**. This principle is a key aspect of the **Dependency Inversion Principle (DIP)**, one of the SOLID principles of object-oriented design.
+
+### Why Reduce Dependency on Specific Implementations?
+- **Flexibility**: You can change or replace specific implementations without modifying the code that uses them.
+- **Testability**: Using abstractions allows for mocking or stubbing in tests.
+- **Extensibility**: Adding new implementations doesn't require changing existing code.
+- **Maintainability**: Abstracting dependencies makes the code easier to understand and maintain.
+
+---
+
+### Example: Without Abstraction (Tightly Coupled Code)
+Here, the `OrderProcessor` class is tightly coupled to the `EmailNotification` class.
+
+#### Code:
+```csharp
+public class EmailNotification
+{
+    public void SendEmail(string message)
+    {
+        Console.WriteLine($"Sending email: {message}");
+    }
+}
+
+public class OrderProcessor
+{
+    private EmailNotification _emailNotification;
+
+    public OrderProcessor()
+    {
+        _emailNotification = new EmailNotification();
+    }
+
+    public void ProcessOrder(string orderDetails)
+    {
+        Console.WriteLine($"Processing order: {orderDetails}");
+        _emailNotification.SendEmail("Order processed successfully.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        OrderProcessor orderProcessor = new OrderProcessor();
+        orderProcessor.ProcessOrder("Order #12345");
+    }
+}
+```
+
+#### Issues:
+1. **Hard Dependency**: `OrderProcessor` directly creates an instance of `EmailNotification`.
+2. **Lack of Flexibility**: If you want to use another notification mechanism (e.g., SMS, Push Notification), you'll need to modify the `OrderProcessor` class.
+3. **Difficult Testing**: You cannot easily test `OrderProcessor` without actually sending an email.
+
+---
+
+### Example: With Abstraction (Loosely Coupled Code)
+By introducing an interface (`INotification`), we decouple the `OrderProcessor` from the specific implementation.
+
+#### Code:
+```csharp
+// Define an interface
+public interface INotification
+{
+    void Notify(string message);
+}
+
+// Implement the interface for email notifications
+public class EmailNotification : INotification
+{
+    public void Notify(string message)
+    {
+        Console.WriteLine($"Sending email: {message}");
+    }
+}
+
+// Implement the interface for SMS notifications
+public class SmsNotification : INotification
+{
+    public void Notify(string message)
+    {
+        Console.WriteLine($"Sending SMS: {message}");
+    }
+}
+
+// OrderProcessor depends on the interface, not the implementation
+public class OrderProcessor
+{
+    private readonly INotification _notification;
+
+    public OrderProcessor(INotification notification)
+    {
+        _notification = notification;
+    }
+
+    public void ProcessOrder(string orderDetails)
+    {
+        Console.WriteLine($"Processing order: {orderDetails}");
+        _notification.Notify("Order processed successfully.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Use EmailNotification
+        INotification emailNotification = new EmailNotification();
+        OrderProcessor emailOrderProcessor = new OrderProcessor(emailNotification);
+        emailOrderProcessor.ProcessOrder("Order #12345");
+
+        // Use SmsNotification
+        INotification smsNotification = new SmsNotification();
+        OrderProcessor smsOrderProcessor = new OrderProcessor(smsNotification);
+        smsOrderProcessor.ProcessOrder("Order #67890");
+    }
+}
+```
+
+#### Benefits:
+1. **Loose Coupling**: The `OrderProcessor` only depends on the `INotification` interface, not the specific implementations.
+2. **Flexibility**: You can easily switch between `EmailNotification` and `SmsNotification` (or add more implementations) without changing the `OrderProcessor` class.
+3. **Testability**: You can mock the `INotification` interface for testing.
+
+---
+
+### Example: Mocking for Testing
+When testing `OrderProcessor`, you can use a mock implementation of `INotification` to verify behavior without sending real notifications.
+
+#### Mock Implementation:
+```csharp
+public class MockNotification : INotification
+{
+    public void Notify(string message)
+    {
+        Console.WriteLine($"Mock notification sent: {message}");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Use MockNotification for testing
+        INotification mockNotification = new MockNotification();
+        OrderProcessor testProcessor = new OrderProcessor(mockNotification);
+
+        // Test order processing
+        testProcessor.ProcessOrder("Test Order");
+    }
+}
+```
+
+#### Output:
+```
+Processing order: Test Order
+Mock notification sent: Order processed successfully.
+```
+
+---
+
+### Key Concepts Applied:
+1. **Dependency Inversion Principle**:
+   - High-level modules (`OrderProcessor`) depend on abstractions (`INotification`), not low-level modules (`EmailNotification` or `SmsNotification`).
+
+2. **Open/Closed Principle**:
+   - `OrderProcessor` is open for extension (e.g., adding new notification types) but closed for modification.
+
+3. **Increased Reusability**:
+   - You can reuse `OrderProcessor` with any class that implements `INotification`.
+
+---
+
+By reducing dependency on specific implementations and programming to interfaces, you make your code more modular, testable, and adaptable to changes.
+
+
+
+
+
+Operator overloading in C# allows developers to redefine the behavior of standard operators (`+`, `-`, `*`, `/`, etc.) for user-defined types. It enhances code readability and enables operators to work seamlessly with custom objects.
+
+---
+
+### **Syntax of Operator Overloading**
+
+To overload an operator:
+1. Use the `operator` keyword.
+2. Define it as a static method in the class.
+3. Pass the appropriate number of operands as parameters.
+
+```csharp
+public static ReturnType operator OperatorSymbol (OperandType1 operand1, OperandType2 operand2)
+{
+    // Logic to handle the operation
+}
+```
+
+---
+
+### **Examples of Operator Overloading**
+
+#### Example 1: Overloading the `+` Operator
+Let's create a `Point` class to represent 2D points and overload the `+` operator to add two points.
+
+```csharp
+using System;
+
+public class Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    public Point(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    // Overload the + operator
+    public static Point operator +(Point p1, Point p2)
+    {
+        return new Point(p1.X + p2.X, p1.Y + p2.Y);
+    }
+
+    public override string ToString()
+    {
+        return $"({X}, {Y})";
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Point p1 = new Point(3, 4);
+        Point p2 = new Point(1, 2);
+
+        Point p3 = p1 + p2; // Using the overloaded + operator
+
+        Console.WriteLine($"p1: {p1}");
+        Console.WriteLine($"p2: {p2}");
+        Console.WriteLine($"p1 + p2 = {p3}");
+    }
+}
+```
+
+#### Output:
+```
+p1: (3, 4)
+p2: (1, 2)
+p1 + p2 = (4, 6)
+```
+
+---
+
+#### Example 2: Overloading the `==` and `!=` Operators
+Overload equality operators for the `Point` class to compare two points.
+
+```csharp
+public class Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    public Point(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    // Overload the == operator
+    public static bool operator ==(Point p1, Point p2)
+    {
+        return p1.X == p2.X && p1.Y == p2.Y;
+    }
+
+    // Overload the != operator
+    public static bool operator !=(Point p1, Point p2)
+    {
+        return !(p1 == p2);
+    }
+
+    public override string ToString()
+    {
+        return $"({X}, {Y})";
+    }
+
+    // Required when overriding == and != to satisfy compiler requirements
+    public override bool Equals(object obj)
+    {
+        if (obj is Point p)
+        {
+            return this == p;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return X ^ Y; // Example hash code
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Point p1 = new Point(3, 4);
+        Point p2 = new Point(3, 4);
+        Point p3 = new Point(1, 2);
+
+        Console.WriteLine($"p1 == p2: {p1 == p2}"); // True
+        Console.WriteLine($"p1 != p3: {p1 != p3}"); // True
+    }
+}
+```
+
+#### Output:
+```
+p1 == p2: True
+p1 != p3: True
+```
+
+---
+
+#### Example 3: Overloading Unary Operators (`-` and `!`)
+Let's overload the unary operators `-` and `!` for a custom `Vector` class.
+
+```csharp
+public class Vector
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    public Vector(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    // Overload the unary - operator
+    public static Vector operator -(Vector v)
+    {
+        return new Vector(-v.X, -v.Y);
+    }
+
+    // Overload the ! operator
+    public static bool operator !(Vector v)
+    {
+        return v.X == 0 && v.Y == 0;
+    }
+
+    public override string ToString()
+    {
+        return $"({X}, {Y})";
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Vector v1 = new Vector(3, 4);
+        Vector v2 = new Vector(0, 0);
+
+        Console.WriteLine($"v1: {v1}");
+        Console.WriteLine($"-v1: {-v1}"); // Unary minus
+        Console.WriteLine($"Is v1 zero? {!v1}"); // Logical NOT
+        Console.WriteLine($"Is v2 zero? {!v2}");
+    }
+}
+```
+
+#### Output:
+```
+v1: (3, 4)
+-v1: (-3, -4)
+Is v1 zero? False
+Is v2 zero? True
+```
+
+---
+
+### Rules for Operator Overloading:
+1. **Only Certain Operators**: Not all operators can be overloaded (e.g., `&&`, `||`, `[]`, `.`).
+2. **Static Methods**: Operator overload methods must always be declared `static`.
+3. **At Least One Operand as User-Defined Type**: At least one operand must be a custom (user-defined) type.
+4. **Consistency**: Always overload related operators together (e.g., `==` and `!=`, `<` and `>`).
+
+---
+
+### Common Use Cases:
+- **Arithmetic Operations**: Simplify adding or subtracting custom types.
+- **Comparison Operators**: Facilitate comparisons of custom objects.
+- **Unary Operators**: Enhance readability for negation or logical checks.
+- **Custom Containers**: Allow array-like behavior with `[]` or `+`.
+
+By overloading operators, your classes can behave like built-in types, enhancing the clarity and usability of your code.
+
+
+
+
+The reason why the **Child Class Show Method** is invoked in both cases is due to **runtime polymorphism** (also known as **method overriding**) in C#. Here's a detailed explanation:
+
+---
+
+### **Key Concepts at Play**
+
+1. **Virtual Method in Base Class**:
+   - The `Show` method in `Class1` is marked as `virtual`, meaning it is **eligible for being overridden** in derived classes.
+   - This enables derived classes to provide their own implementation of the method.
+
+2. **Overriding in Derived Class**:
+   - The `Show` method in `Class2` uses the `override` keyword, which **replaces the base class implementation** with the derived class's implementation for objects of the derived type.
+
+3. **Runtime Polymorphism**:
+   - When you call a method on an object, the **actual method invoked is determined at runtime**, not compile time.
+   - The decision is based on the **type of the object the reference is pointing to** (i.e., the runtime type), not the type of the reference variable.
+
+---
+
+### **Breakdown of the Code Execution**
+
+#### **Case 1**: 
+```csharp
+Class1 obj1 = new Class2();
+obj1.Show();
+```
+
+- **Compile-time Type**: `Class1`
+- **Runtime Type**: `Class2`
+- **Method Invoked**: Since the actual object is of type `Class2` (runtime type), the overridden `Show` method in `Class2` is called.
+
+#### **Case 2**: 
+```csharp
+Class2 obj2 = new Class2();
+obj2.Show();
+```
+
+- **Compile-time Type**: `Class2`
+- **Runtime Type**: `Class2`
+- **Method Invoked**: Since both the compile-time and runtime types are `Class2`, the overridden `Show` method in `Class2` is called.
+
+---
+
+### **Why Doesn't the Parent Class Method Run?**
+
+When the `Show` method is invoked, the decision on **which version** to execute is made at runtime. In both cases:
+- The actual object (`obj1` or `obj2`) is of type `Class2`, so the `Show` method of `Class2` is executed.
+
+This behavior is the essence of **runtime polymorphism**, allowing derived classes to redefine base class behavior while still being referred to as the base type.
+
+---
+
+### **Important Notes**
+1. If the `Show` method in the base class (`Class1`) was **not marked as `virtual`**, the method in the base class would have been called in the first case, because the compiler would use **early binding** (compile-time decision).
+   ```csharp
+   public void Show() // Not virtual
+   ```
+   In this case, the output for `obj1.Show()` would be:
+   ```
+   Parent Class Show Method
+   ```
+
+2. **Virtual functions and override** enable the flexibility of polymorphism by allowing derived classes to customize behavior while maintaining a consistent interface.
+
+
+
+
+using System;
+
+class BaseClass
+{
+    public virtual void VirtualMethod()
+    {
+        Console.WriteLine("Base Class Virtual Method");
+    }
+
+    public void HiddenMethod()
+    {
+        Console.WriteLine("Base Class Hidden Method");
+    }
+}
+
+class DerivedClass : BaseClass
+{
+    public override void VirtualMethod()
+    {
+        Console.WriteLine("Derived Class Overridden Virtual Method");
+    }
+
+    public new void HiddenMethod()
+    {
+        Console.WriteLine("Derived Class Hidden Method");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        BaseClass baseObj = new BaseClass();
+        baseObj.VirtualMethod(); // Base Class Virtual Method
+        baseObj.HiddenMethod(); // Base Class Hidden Method
+
+        DerivedClass derivedObj = new DerivedClass();
+        derivedObj.VirtualMethod(); // Derived Class Overridden Virtual Method
+        derivedObj.HiddenMethod(); // Derived Class Hidden Method
+
+        BaseClass obj = new DerivedClass();
+        obj.VirtualMethod(); // Derived Class Overridden Virtual Method (runtime decision)
+        obj.HiddenMethod(); // Base Class Hidden Method (compile-time decision)
+    }
+}
+
+
+
+
+
+When two requests come from two different users to the same API endpoint, **multithreading** and **concurrency** come into play. To understand how threads handle these requests, let's break down the process step by step.
+
+### **1. Overview of Threading in Web APIs**
+
+When you create a web API, such as an ASP.NET Core API, the server (e.g., IIS, Kestrel) uses threads to handle incoming requests. Web servers typically use **thread pools** to manage a limited number of threads to handle concurrent requests. Here's how it works when multiple users make requests simultaneously:
+
+### **How Threads Handle Multiple Requests**
+
+1. **Concurrency**:
+   - When two users send requests at the same time, the web server (e.g., Kestrel or IIS) places each request in the **request queue**. 
+   - The server then assigns an **available thread** from its thread pool to each request.
+
+2. **Thread Pool**:
+   - **Thread pools** are used to manage and reuse threads. When a new request arrives, the server checks if there is an idle thread available.
+   - If a thread is available, it assigns the request to that thread for processing.
+   - If there are no available threads, the server may queue the request and wait for a thread to become free, or it may spawn additional threads (depending on the configuration and the server's limits).
+   
+3. **Handling Requests**:
+   - Each request is processed independently in its own thread. The request processing includes executing the relevant controller logic, interacting with databases, etc.
+   - The server processes the requests concurrently (in parallel or interleaved, depending on the number of threads available).
+   
+4. **Asynchronous Processing**:
+   - In most modern web APIs, requests are handled **asynchronously** using `async` and `await` keywords. This means that while the thread is waiting for I/O operations (like database queries, file I/O, or external service calls), it is free to process other requests.
+   - This is important because asynchronous methods allow the thread to be released while waiting for I/O operations to complete, which can help improve the efficiency of handling many simultaneous requests.
+
+5. **Response**:
+   - After processing the request, the server sends the response back to the client. Once a request is completed and the response is sent, the thread is returned to the thread pool to be reused for future requests.
+
+---
+
+### **Threading in Detail (Request Handling)**
+
+Here's a simplified breakdown of how the threads are used to handle two requests coming from two different users:
+
+#### **Step-by-Step Execution**:
+- **User 1** sends a request to the API endpoint.
+    1. The request is received by the server and placed in the request queue.
+    2. An available thread from the thread pool is assigned to handle User 1's request.
+    3. The server processes the request: executes code, accesses a database, etc.
+    4. Once the request is fully processed, the server sends the response back to User 1.
+    5. The thread is returned to the thread pool.
+
+- **User 2** sends a request to the same API endpoint (or a different endpoint).
+    1. The request is placed in the request queue (if no available thread).
+    2. Another available thread from the thread pool is assigned to handle User 2's request.
+    3. The server processes User 2's request in a similar manner as User 1's request.
+    4. Once processed, the server sends the response to User 2.
+    5. The thread is returned to the thread pool.
+
+---
+
+### **Threading in Action: Example with Async/Await**
+
+Let's assume the API is written using **ASP.NET Core**, and the controller method is asynchronous. The use of `async` and `await` allows efficient handling of multiple requests.
+
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class MyController : ControllerBase
+{
+    // Simulated asynchronous method to fetch data (e.g., from a database)
+    public async Task<string> GetDataFromDatabaseAsync()
+    {
+        await Task.Delay(500);  // Simulate database query delay
+        return "Data from database";
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        // The thread is released during the database call (asynchronous)
+        var data = await GetDataFromDatabaseAsync();
+        return Ok(data);  // Respond to the client with the result
+    }
+}
+```
+
+### **How It Works with Two Requests**:
+
+1. **User 1's Request**:
+    - When User 1 sends a GET request, the thread is assigned to process the request.
+    - The `GetDataFromDatabaseAsync()` method is called, and while the server is waiting for the "database" to respond, the thread is **released** and returned to the thread pool.
+    - During this wait, the thread pool can process other requests (e.g., User 2's request).
+    - Once the `Task.Delay()` completes, the thread is picked up again to process the response and send it back to User 1.
+
+2. **User 2's Request**:
+    - Simultaneously, User 2 sends a GET request.
+    - The thread pool assigns a new thread to handle User 2's request.
+    - User 2's request also calls `GetDataFromDatabaseAsync()`, and the thread is released again while waiting for the simulated database response.
+    - Once the task for User 2 completes, the response is sent to User 2.
+
+### **Key Points**:
+- **Threads are reused**: After handling the request, the thread is returned to the thread pool for reuse.
+- **Asynchronous execution** allows the server to handle many requests with fewer threads, increasing efficiency, especially when waiting for I/O operations.
+- **Concurrency** means multiple requests can be handled at the same time by using different threads or by switching between tasks on the same thread.
+
+---
+
+### **Thread Pool and Threading Considerations**
+
+- **Thread Pool Size**: Servers have a limited number of threads. If the server runs out of threads, it can queue requests or spawn additional threads, depending on the configuration.
+- **Scalability**: For high-traffic APIs, it's important to design the application to handle a large number of concurrent requests efficiently, using techniques such as asynchronous programming, load balancing, and horizontal scaling.
+- **Thread Safety**: When handling shared resources, make sure the code is **thread-safe**. For example, accessing shared data or state must be done carefully to avoid race conditions and data corruption.
+
+---
+
+### **Conclusion**
+
+When two requests come from different users, the web server assigns available threads from the thread pool to handle each request. These requests are processed concurrently, and if they involve waiting for I/O (e.g., database queries), asynchronous methods are used to free up threads while waiting. The server can handle multiple requests efficiently using the thread pool and asynchronous programming techniques.
+
+
+
+
+
+In **C#**, the `Task` class represents an asynchronous operation. It is part of the **Task Parallel Library (TPL)** in the `System.Threading.Tasks` namespace and is used to execute work asynchronously, making efficient use of system resources.
+
+---
+
+## **Key Features of `Task`**
+
+- **Represents:** A single operation or a chain of asynchronous operations.
+- **Supports:** Continuations, cancellation, and progress reporting.
+- **Types:**
+  - `Task`: For operations without a return value.
+  - `Task<TResult>`: For operations that return a value.
+
+---
+
+## **Basic Example of a Task**
+
+### **Task Without Return Value**
+```csharp
+using System;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        await RunTaskAsync();
+    }
+
+    public static async Task RunTaskAsync()
+    {
+        await Task.Run(() =>
+        {
+            Console.WriteLine("Task running...");
+        });
+        Console.WriteLine("Task completed.");
+    }
+}
+```
+
+---
+
+### **Task with Return Value**
+```csharp
+using System;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        int result = await CalculateSumAsync(10, 20);
+        Console.WriteLine($"The sum is {result}");
+    }
+
+    public static Task<int> CalculateSumAsync(int a, int b)
+    {
+        return Task.Run(() => a + b);
+    }
+}
+```
+
+---
+
+## **Chaining Tasks**
+
+You can chain tasks to perform operations sequentially using `ContinueWith`.
+
+```csharp
+using System;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        Task<int> task = Task.Run(() =>
+        {
+            return 10;
+        }).ContinueWith(t =>
+        {
+            return t.Result * 2; // Multiply the result of the first task by 2
+        });
+
+        int finalResult = await task;
+        Console.WriteLine($"Final result: {finalResult}");
+    }
+}
+```
+
+---
+
+## **Handling Exceptions in Tasks**
+
+Exception handling is done using `try-catch` with `await`, or by checking the `Task.Exception` property.
+
+```csharp
+using System;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        try
+        {
+            await TaskWithExceptionAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Caught exception: {ex.Message}");
+        }
+    }
+
+    public static Task TaskWithExceptionAsync()
+    {
+        return Task.Run(() =>
+        {
+            throw new InvalidOperationException("An error occurred in the task.");
+        });
+    }
+}
+```
+
+---
+
+## **Running Multiple Tasks in Parallel**
+
+Use `Task.WhenAll` to wait for multiple tasks to complete.
+
+```csharp
+using System;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        Task<int> task1 = Task.Run(() => 10);
+        Task<int> task2 = Task.Run(() => 20);
+
+        int[] results = await Task.WhenAll(task1, task2);
+
+        Console.WriteLine($"Sum: {results[0] + results[1]}");
+    }
+}
+```
+
+---
+
+## **Task.Delay for Simulating Work**
+
+Use `Task.Delay` to simulate an asynchronous delay.
+
+```csharp
+using System;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        Console.WriteLine("Starting task...");
+        await Task.Delay(2000); // Simulates a delay of 2 seconds
+        Console.WriteLine("Task finished after delay.");
+    }
+}
+```
+
+---
+
+## **Using CancellationToken**
+
+Tasks can be canceled using a `CancellationToken`.
+
+```csharp
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        var cts = new CancellationTokenSource();
+
+        Task task = PerformTaskAsync(cts.Token);
+
+        Console.WriteLine("Press any key to cancel...");
+        Console.ReadKey();
+        cts.Cancel();
+
+        try
+        {
+            await task;
+        }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("Task was canceled.");
+        }
+    }
+
+    public static async Task PerformTaskAsync(CancellationToken token)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            token.ThrowIfCancellationRequested();
+            Console.WriteLine($"Working... {i + 1}");
+            await Task.Delay(1000, token);
+        }
+        Console.WriteLine("Task completed.");
+    }
+}
+```
+
+---
+
+## **Task.FromResult and Task.CompletedTask**
+
+- **`Task.FromResult`**: Creates a completed `Task` with a result.
+- **`Task.CompletedTask`**: Represents a completed `Task` without a result.
+
+```csharp
+public Task<int> GetNumberAsync()
+{
+    return Task.FromResult(42); // Immediately returns a completed Task with result 42
+}
+
+public Task DoNothingAsync()
+{
+    return Task.CompletedTask; // Immediately returns a completed Task
+}
+```
+
+---
+
+## **Best Practices**
+1. Use `async`/`await` for readability and maintainability.
+2. Avoid blocking tasks with `.Wait()` or `.Result`.
+3. Use `Task.Run` for CPU-bound operations and async/await for I/O-bound operations.
+4. Handle exceptions in tasks properly using `try-catch`.
+5. Use `ConfigureAwait(false)` in library code to prevent deadlocks in UI-based applications.
+
+Would you like to explore advanced scenarios, such as **progress reporting** or **parallel processing** with `Task`?
+
+
+
+
+
+**Retry Logic** in .NET Core involves implementing a mechanism to automatically retry a failed operation (such as a network request, database operation, or external API call) after a certain interval, for a specific number of attempts. This approach helps handle transient failures like network issues or temporary unavailability of a service.
+
+---
+
+### **Ways to Implement Retry Logic in .NET Core**
+
+1. **Manual Implementation**: Custom retry logic using loops or recursion.
+2. **Using Polly Library**: A popular and robust library for retry, circuit breaker, and fallback patterns.
+
+---
+
+### **1. Manual Retry Logic**
+
+#### Example: HTTP Retry with Manual Implementation
+```csharp
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        string url = "https://jsonplaceholder.typicode.com/posts";
+        int maxRetryAttempts = 3;
+        TimeSpan delay = TimeSpan.FromSeconds(2);
+
+        HttpClient client = new HttpClient();
+
+        try
+        {
+            string response = await RetryAsync(() => MakeHttpRequest(client, url), maxRetryAttempts, delay);
+            Console.WriteLine("Response received:");
+            Console.WriteLine(response);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Operation failed after {maxRetryAttempts} attempts: {ex.Message}");
+        }
+    }
+
+    private static async Task<string> MakeHttpRequest(HttpClient client, string url)
+    {
+        Console.WriteLine("Making HTTP request...");
+        HttpResponseMessage response = await client.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
+    }
+
+    private static async Task<T> RetryAsync<T>(Func<Task<T>> operation, int maxRetryAttempts, TimeSpan delay)
+    {
+        int attempt = 0;
+
+        while (true)
+        {
+            try
+            {
+                attempt++;
+                return await operation();
+            }
+            catch (Exception ex) when (attempt < maxRetryAttempts)
+            {
+                Console.WriteLine($"Attempt {attempt} failed: {ex.Message}. Retrying in {delay.Seconds} seconds...");
+                await Task.Delay(delay);
+            }
+        }
+    }
+}
+```
+
+---
+
+### **2. Using Polly Library**
+
+The **Polly** library simplifies retry logic and supports advanced scenarios like jittered retries, circuit breakers, and fallback mechanisms.
+
+#### Install Polly via NuGet
+```bash
+dotnet add package Polly
+```
+
+#### Example: Retry with Polly
+```csharp
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Polly;
+using Polly.Retry;
+
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        var retryPolicy = Policy
+            .Handle<HttpRequestException>() // Handle only HttpRequestExceptions
+            .WaitAndRetryAsync(3, retryAttempt => 
+                TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), // Exponential backoff
+                (exception, timeSpan, attempt, context) =>
+                {
+                    Console.WriteLine($"Attempt {attempt} failed. Waiting {timeSpan.Seconds} seconds...");
+                });
+
+        using HttpClient client = new HttpClient();
+
+        try
+        {
+            string response = await retryPolicy.ExecuteAsync(() => MakeHttpRequest(client, "https://jsonplaceholder.typicode.com/posts"));
+            Console.WriteLine("Response received:");
+            Console.WriteLine(response);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Operation failed after retries: {ex.Message}");
+        }
+    }
+
+    private static async Task<string> MakeHttpRequest(HttpClient client, string url)
+    {
+        Console.WriteLine("Making HTTP request...");
+        HttpResponseMessage response = await client.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
+    }
+}
+```
+
+---
+
+### **Polly Features**
+
+1. **Retry Policies**:
+   - `RetryAsync`: Immediate retries.
+   - `WaitAndRetryAsync`: Wait before retrying (supports exponential backoff).
+
+2. **Jitter**: To avoid spikes during retries, add randomness to retry intervals.
+   ```csharp
+   .WaitAndRetryAsync(3, retryAttempt => 
+       TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)) + TimeSpan.FromMilliseconds(new Random().Next(0, 100)));
+   ```
+
+3. **Fallback**: Define an alternative action if all retries fail.
+   ```csharp
+   var fallbackPolicy = Policy<string>
+       .Handle<HttpRequestException>()
+       .FallbackAsync("Fallback response", (exception, context) =>
+       {
+           Console.WriteLine($"Fallback executed: {exception.Message}");
+           return Task.CompletedTask;
+       });
+   ```
+
+4. **Combine Policies**:
+   ```csharp
+   var retryAndFallbackPolicy = Policy.WrapAsync(retryPolicy, fallbackPolicy);
+   ```
+
+---
+
+### **3. Retry for Database Operations**
+
+You can use retry logic with database operations, such as those performed using **Entity Framework Core**.
+
+#### Example: Entity Framework Core with Polly
+```csharp
+services.AddDbContext<MyDbContext>(options =>
+    options.UseSqlServer(connectionString)
+           .EnableRetryOnFailure(maxRetryCount: 3, 
+                                 maxRetryDelay: TimeSpan.FromSeconds(5), 
+                                 errorNumbersToAdd: null));
+```
+
+---
+
+### **When to Use Retry Logic**
+
+- **Network Requests**: Handle transient errors like timeouts or DNS resolution failures.
+- **Database Connections**: Handle temporary unavailability or network issues.
+- **External APIs**: Handle rate-limiting or server-side issues.
+
+---
+
+### **Best Practices**
+
+1. **Retry Only Transient Failures**:
+   - Use specific exception types (e.g., `HttpRequestException` or transient database errors).
+   - Avoid retrying for permanent failures.
+
+2. **Use Exponential Backoff**:
+   - Gradually increase the delay between retries to reduce server load.
+
+3. **Limit Retry Attempts**:
+   - Define a reasonable number of retries to avoid long delays.
+
+4. **Log Retry Attempts**:
+   - Log each attempt and reason for failure for better debugging.
+
+5. **Combine with Circuit Breakers**:
+   - Stop retrying if the system detects frequent failures in a short time frame.
+
+---
+
+Would you like to explore advanced retry scenarios like **retry with timeout**, **retry with multiple dependent operations**, or **real-time monitoring of retries**?
+
+
+
+
+
+Certainly! Let's go through each topic in-depth:
+
+### 1. **Introduction to Concurrency in C#**
+
+Concurrency refers to the concept of executing multiple tasks or processes in overlapping periods of time. It doesn't necessarily mean that tasks are running at the same exact moment (that's parallelism), but that they make progress without being blocked by other tasks.
+
+#### **Why is Concurrency Important?**
+Concurrency is important in modern applications because:
+- It allows programs to remain responsive (such as UI applications that don't freeze when performing lengthy operations).
+- It makes better use of hardware resources like multiple cores and processors.
+
+In C#, concurrency is typically achieved through the use of **asynchronous programming**, which allows a program to initiate an operation and then move on to other tasks without waiting for the operation to complete.
+
+When we refer to **concurrent programming** in C#, we usually refer to the use of:
+- **`Task` class** for managing background work.
+- **`async`/`await` keywords** to simplify asynchronous code.
+- **Parallel programming** (for CPU-bound tasks) which allows tasks to be distributed across multiple cores.
+
+C# provides the **`Task Parallel Library (TPL)`** and the **`async/await`** pattern to handle concurrency more effectively.
+
+### 2. **Async and Await in C#**
+
+The `async` and `await` keywords were introduced in C# 5 to simplify asynchronous programming. These keywords are designed to work with the `Task` type, allowing developers to write asynchronous code in a more readable, synchronous style.
+
+#### **Async Keyword:**
+
+- The `async` keyword is used to modify a method to indicate that it is asynchronous.
+- It tells the compiler that the method contains an `await` expression.
+- An `async` method must return either `Task`, `Task<T>`, or `void`. Most commonly, it returns `Task` or `Task<T>`.
+- If the method performs asynchronous work, the compiler converts it to return control to the caller, without blocking the thread.
+
+**Example:**
+
+```csharp
+public async Task<int> FetchDataAsync()
+{
+    // Simulate an asynchronous operation like I/O or web request
+    await Task.Delay(2000); // Simulates waiting for 2 seconds
+    return 42; // The result is returned asynchronously
+}
+```
+
+In this example:
+- `FetchDataAsync` is marked `async`.
+- The `await Task.Delay(2000)` simulates a delay, and while waiting, the program can do other tasks (non-blocking).
+- The method returns a `Task<int>`, allowing us to await the result in the calling code.
+
+#### **Await Keyword:**
+
+- The `await` keyword is used within an `async` method to pause execution of the method until the awaited task is completed.
+- It allows asynchronous code to be written in a manner that looks synchronous.
+- `await` can only be used inside methods marked with `async`.
+- It ensures that the result of the task is available once it is completed.
+
+**Example:**
+
+```csharp
+public async Task ExampleAsync()
+{
+    int result = await FetchDataAsync(); // Pauses here until FetchDataAsync is complete
+    Console.WriteLine($"The result is {result}");
+}
+```
+
+Here, `await FetchDataAsync()` will asynchronously wait for the `FetchDataAsync` method to complete and then proceed with the result.
+
+### 3. **Task in C#**
+
+A `Task` represents an asynchronous operation in C#. It is part of the **`System.Threading.Tasks`** namespace and is used for running operations asynchronously.
+
+#### **Task vs. Thread**
+
+- **Thread**: A thread is a low-level OS construct for running code concurrently. Each thread consumes system resources, and creating too many threads can lead to performance degradation.
+- **Task**: A `Task` is a higher-level construct built on top of threads. It represents an asynchronous operation that can run in parallel. `Task` provides better scalability by efficiently managing thread usage.
+
+#### **Task Types:**
+
+- **`Task`**: Represents an operation that does not return a value.
+- **`Task<T>`**: Represents an operation that returns a result of type `T`.
+- **`Task.WhenAll()`**: Used to wait for multiple tasks to complete.
+- **`Task.WhenAny()`**: Used to wait for the first task to complete.
+
+**Example of Task:**
+
+```csharp
+public void RunTask()
+{
+    Task task = Task.Run(() =>
+    {
+        // Do some work in the background
+        Thread.Sleep(2000); // Simulate work
+        Console.WriteLine("Task completed");
+    });
+}
+```
+
+Here, `Task.Run` is used to run code in a background thread asynchronously, freeing up the main thread.
+
+#### **Returning Values from Tasks**
+
+You can return values from asynchronous operations using `Task<T>`. It allows you to return a value when the task completes.
+
+**Example:**
+
+```csharp
+public async Task<int> ComputeSumAsync(int a, int b)
+{
+    return await Task.Run(() => a + b);  // Perform the computation asynchronously
+}
+```
+
+Here, `ComputeSumAsync` returns a `Task<int>`, which means the result can be accessed asynchronously using `await`.
+
+### 4. **How to Return a Value from Task in C#**
+
+When dealing with `Task` or `Task<T>`, if you need to return a value from an asynchronous operation, you should use `Task<T>`. This allows the asynchronous method to produce a result once completed.
+
+#### **Returning Values with Task<T>**
+
+You can return a value by wrapping the result inside `Task<T>`. When you `await` this task, you get the result.
+
+**Example:**
+
+```csharp
+public async Task<string> GetDataAsync()
+{
+    await Task.Delay(1000); // Simulate async work (e.g., file I/O, web request)
+    return "Data fetched";
+}
+
+public async Task CallGetData()
+{
+    string data = await GetDataAsync();
+    Console.WriteLine(data);  // Outputs "Data fetched"
+}
+```
+
+- The `GetDataAsync` method returns a `Task<string>`, so when awaited, the result is the value `string` returned from the method.
+
+#### **Task.Run and Returning a Value**
+
+You can also run code asynchronously using `Task.Run` and return a value inside the task.
+
+```csharp
+public Task<int> SumAsync(int x, int y)
+{
+    return Task.Run(() => x + y);  // Return a value computed asynchronously
+}
+```
+
+### 5. **How to Execute Multiple Tasks in C#**
+
+When you need to execute multiple tasks concurrently, you can use `Task.WhenAll` or `Task.WhenAny`.
+
+#### **Task.WhenAll()**
+
+`Task.WhenAll` is used to wait for multiple tasks to complete. It returns a `Task` that will complete when all the tasks in the collection have finished.
+
+**Example of Task.WhenAll():**
+
+```csharp
+public async Task ExecuteMultipleTasks()
+{
+    Task task1 = Task.Run(() => { Thread.Sleep(1000); Console.WriteLine("Task 1 complete"); });
+    Task task2 = Task.Run(() => { Thread.Sleep(2000); Console.WriteLine("Task 2 complete"); });
+    Task task3 = Task.Run(() => { Thread.Sleep(3000); Console.WriteLine("Task 3 complete"); });
+    
+    await Task.WhenAll(task1, task2, task3); // Wait for all tasks to complete
+}
+```
+
+In this example, all three tasks run concurrently. The method `WhenAll` ensures that the program waits for all the tasks to finish before continuing.
+
+#### **Task.WhenAny()**
+
+`Task.WhenAny` returns a `Task` that completes as soon as any of the provided tasks completes. It’s useful when you want to continue once the first task completes, regardless of the others.
+
+**Example of Task.WhenAny():**
+
+```csharp
+public async Task ExecuteFirstTask()
+{
+    Task task1 = Task.Delay(3000);  // Task that will complete after 3 seconds
+    Task task2 = Task.Delay(1000);  // Task that will complete after 1 second
+    
+    Task firstToComplete = await Task.WhenAny(task1, task2); // Wait for any task to finish
+    Console.WriteLine("The first task to complete finished.");
+}
+```
+
+Here, the second task completes first because it only delays for 1 second, and `WhenAny` will complete as soon as the fastest task finishes.
+
+### Conclusion
+
+Mastering concurrency and asynchronous programming in C# is essential for building modern applications that remain responsive while performing I/O-bound or computationally intensive operations. By using `async`, `await`, and `Task`, C# allows you to handle multiple operations concurrently in an efficient and maintainable manner.
+
+
+
+
+
+`ConfigureAwait(false)` is a method in C# used to control how an asynchronous operation resumes after it has been awaited. It's especially important in contexts where you want to optimize performance or avoid potential deadlocks.
+
+---
+
+### **Default Behavior of `await`**
+
+When you use `await` in an asynchronous method:
+- By default, after the awaited operation completes, the continuation (the code after `await`) tries to resume on the same synchronization context or thread that the method was originally running on. 
+- This is useful for UI applications, where you might want to update UI elements after an asynchronous operation, and UI updates must happen on the main thread.
+
+### **What Does `ConfigureAwait(false)` Do?**
+
+When you use `ConfigureAwait(false)`, it tells the runtime that:
+1. **Do not capture the current synchronization context.**
+2. **Allow the continuation to run on any available thread.**
+
+This means the code after the `await` may execute on a different thread, which can improve performance by reducing the overhead of context switching.
+
+---
+
+### **When to Use `ConfigureAwait(false)`**
+
+- **In non-UI applications**: If you're working on a backend service, console application, or library, you typically don't need to resume on the original synchronization context. Using `ConfigureAwait(false)` can improve performance.
+- **In library code**: If you're writing a reusable library, use `ConfigureAwait(false)` to avoid tying your code to a specific synchronization context.
+- **To avoid deadlocks**: In some cases, especially in UI or ASP.NET applications, resuming on the original context can lead to deadlocks. Using `ConfigureAwait(false)` helps prevent this.
+
+---
+
+### **When NOT to Use `ConfigureAwait(false)`**
+
+- **In UI applications**: If you need to update the UI after an asynchronous operation, avoid using `ConfigureAwait(false)` because it will switch to a thread where UI updates are not allowed, causing an exception.
+
+---
+
+### **Example of `ConfigureAwait(false)`**
+
+#### Without `ConfigureAwait(false)` (default behavior):
+
+```csharp
+public async Task GetDataAsync()
+{
+    Console.WriteLine($"Before await: Thread {Thread.CurrentThread.ManagedThreadId}");
+    await Task.Delay(1000); // Simulates an asynchronous operation
+    Console.WriteLine($"After await: Thread {Thread.CurrentThread.ManagedThreadId}");
+}
+```
+
+Output:
+```
+Before await: Thread 1
+After await: Thread 1  // Resumes on the same thread (main thread).
+```
+
+#### With `ConfigureAwait(false)`:
+
+```csharp
+public async Task GetDataAsync()
+{
+    Console.WriteLine($"Before await: Thread {Thread.CurrentThread.ManagedThreadId}");
+    await Task.Delay(1000).ConfigureAwait(false);
+    Console.WriteLine($"After await: Thread {Thread.CurrentThread.ManagedThreadId}");
+}
+```
+
+Output:
+```
+Before await: Thread 1
+After await: Thread 4  // Resumes on a different thread.
+```
+
+---
+
+### **Benefits of `ConfigureAwait(false)`**
+
+1. **Improved Performance**: Reduces the cost of capturing and restoring the synchronization context.
+2. **Avoids Deadlocks**: Particularly in ASP.NET or UI applications, where resuming on the same thread can lead to deadlocks if the thread is blocked.
+3. **More Flexible Thread Usage**: Allows the runtime to choose any available thread for the continuation, enabling better resource utilization.
+
+---
+
+### **Common Pitfalls of `ConfigureAwait(false)`**
+
+- **Losing synchronization context**: If you need to resume on the original context (e.g., to update UI), you cannot use `ConfigureAwait(false)`.
+- **Inconsistent behavior**: Mixing `ConfigureAwait(false)` and default `await` can cause some continuations to run on different threads, potentially leading to hard-to-debug issues.
+
+---
+
+### **Best Practices for Using `ConfigureAwait(false)`**
+
+1. Use `ConfigureAwait(false)` in **library or backend code** where there's no need to resume on the original context.
+2. Avoid using it in **UI-related code** where thread affinity is required.
+3. If you're writing a **library**, document that it uses `ConfigureAwait(false)` so consumers know that continuations may not run on the original thread.
+
+By understanding and using `ConfigureAwait(false)` appropriately, you can write more efficient, deadlock-free asynchronous code.
+
+
+
+
+### 1. **How to Limit the Number of Concurrent Tasks in C#**
+
+When working with multiple tasks in parallel, there are situations where you need to control how many tasks run concurrently to avoid overwhelming system resources (e.g., too many database or network requests).
+
+#### **Solution: SemaphoreSlim**
+
+To limit the number of concurrent tasks, you can use **`SemaphoreSlim`**, which controls access to a resource pool by a specific number of threads.
+
+#### **Example: Limiting Concurrent Tasks**
+
+```csharp
+public async Task ProcessTasksWithLimitAsync()
+{
+    var semaphore = new SemaphoreSlim(3); // Allow at most 3 concurrent tasks
+    var tasks = new List<Task>();
+
+    for (int i = 0; i < 10; i++)
+    {
+        await semaphore.WaitAsync(); // Acquire the semaphore
+        tasks.Add(Task.Run(async () =>
+        {
+            try
+            {
+                Console.WriteLine($"Task {i} started");
+                await Task.Delay(2000); // Simulate work
+                Console.WriteLine($"Task {i} completed");
+            }
+            finally
+            {
+                semaphore.Release(); // Release the semaphore
+            }
+        }));
+    }
+
+    await Task.WhenAll(tasks); // Wait for all tasks to complete
+}
+```
+
+In this example, at most 3 tasks will run concurrently, while others wait for the semaphore to be released.
+
+---
+
+### 2. **How to Cancel a Task in C# using CancellationToken**
+
+In long-running operations, it's important to provide a way to cancel a task gracefully. This is done using a **`CancellationToken`**.
+
+#### **Steps to Cancel a Task:**
+
+1. Create a `CancellationTokenSource`.
+2. Pass its `CancellationToken` to the task.
+3. Periodically check for `cancellationToken.IsCancellationRequested` in the task.
+4. Handle cancellation by throwing `OperationCanceledException` or simply returning.
+
+#### **Example: Task Cancellation**
+
+```csharp
+public async Task RunCancelableTaskAsync(CancellationToken cancellationToken)
+{
+    for (int i = 0; i < 10; i++)
+    {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            Console.WriteLine("Task canceled");
+            return;
+        }
+
+        Console.WriteLine($"Processing step {i}");
+        await Task.Delay(1000); // Simulate work
+    }
+    Console.WriteLine("Task completed");
+}
+
+public void CancelTaskExample()
+{
+    var cts = new CancellationTokenSource();
+
+    // Start the task
+    var task = RunCancelableTaskAsync(cts.Token);
+
+    // Cancel the task after 3 seconds
+    Task.Delay(3000).ContinueWith(t => cts.Cancel());
+
+    task.Wait();
+}
+```
+
+---
+
+### 3. **How to Create a Synchronous Method Using Task in C#**
+
+In some cases, you might need to create a synchronous wrapper for an asynchronous method (e.g., for backward compatibility).
+
+#### **Solution: Use `Task.Result` or `Task.Wait`**
+
+You can call `Task.Result` to block and get the result of an asynchronous method or use `Task.Wait` to wait for a task to complete without returning a result.
+
+#### **Example: Synchronous Wrapper**
+
+```csharp
+public async Task<int> ComputeAsync()
+{
+    await Task.Delay(1000); // Simulate async work
+    return 42;
+}
+
+// Synchronous wrapper
+public int Compute()
+{
+    return ComputeAsync().Result; // Block and get the result
+}
+```
+
+**Note**: Be cautious with `Task.Result` or `Task.Wait` as they can lead to deadlocks in certain contexts (e.g., UI thread).
+
+---
+
+### 4. **Retry Pattern in C#**
+
+The retry pattern is used to handle transient errors (e.g., network issues or temporary database unavailability) by retrying the operation after a failure.
+
+#### **Key Elements:**
+- Define the number of retry attempts.
+- Add a delay between retries (optional).
+- Handle exceptions appropriately.
+
+#### **Example: Retry with Exponential Backoff**
+
+```csharp
+public async Task RetryAsync(Func<Task> operation, int maxRetries = 3, int delayMilliseconds = 1000)
+{
+    for (int attempt = 1; attempt <= maxRetries; attempt++)
+    {
+        try
+        {
+            await operation();
+            return; // If successful, exit the loop
+        }
+        catch (Exception ex) when (attempt < maxRetries)
+        {
+            Console.WriteLine($"Attempt {attempt} failed. Retrying...");
+            await Task.Delay(delayMilliseconds * attempt); // Exponential backoff
+        }
+    }
+
+    throw new Exception("Operation failed after maximum retries.");
+}
+
+// Usage
+public async Task ExampleWithRetry()
+{
+    await RetryAsync(async () =>
+    {
+        Console.WriteLine("Performing operation...");
+        throw new Exception("Transient error"); // Simulate a transient error
+    });
+}
+```
+
+---
+
+### 5. **Only One Pattern in C#**
+
+The "Only One" pattern ensures that only one instance of a task or operation runs at any given time, even if multiple calls are made.
+
+#### **Solution: Use `Lazy<Task>` or a Lock**
+
+#### **Example Using `Lazy<Task>`**
+
+```csharp
+private Lazy<Task<string>> _singleTask = new Lazy<Task<string>>(() => GetDataAsync());
+
+public async Task<string> GetDataAsync()
+{
+    await Task.Delay(2000); // Simulate async work
+    return "Data fetched";
+}
+
+public async Task<string> OnlyOneInstanceAsync()
+{
+    return await _singleTask.Value;
+}
+```
+
+In this example, only one instance of `GetDataAsync` will run, even if `OnlyOneInstanceAsync` is called multiple times.
+
+---
+
+### 6. **How to Control the Result of a Task in C#**
+
+Sometimes you need to create a task and control its result manually. This can be done using `TaskCompletionSource<T>`.
+
+#### **Example Using `TaskCompletionSource<T>`**
+
+```csharp
+public Task<string> GetControlledTask()
+{
+    var tcs = new TaskCompletionSource<string>();
+
+    // Simulate work
+    Task.Run(() =>
+    {
+        Thread.Sleep(2000); // Simulate delay
+        tcs.SetResult("Controlled result");
+    });
+
+    return tcs.Task; // Return the task
+}
+
+public async Task UseControlledTask()
+{
+    string result = await GetControlledTask();
+    Console.WriteLine(result); // Outputs "Controlled result"
+}
+```
+
+With `TaskCompletionSource<T>`, you can control when and how the task completes, as well as whether it fails or gets canceled.
+
+---
+
+### 7. **Task-Based Asynchronous Programming in C#**
+
+Task-based asynchronous programming (TAP) is the modern approach to concurrency in C#. TAP revolves around the `Task` and `Task<T>` types, which represent asynchronous operations.
+
+#### **Key Characteristics of TAP:**
+- Methods return `Task` or `Task<T>` to represent asynchronous work.
+- `async` and `await` keywords make asynchronous code easier to write and read.
+- Tasks can represent both short-running and long-running operations.
+
+#### **Example of TAP in Action**
+
+```csharp
+public async Task<string> FetchDataAsync()
+{
+    await Task.Delay(1000); // Simulate I/O operation
+    return "Data fetched";
+}
+
+public async Task UseTaskBasedProgramming()
+{
+    string result = await FetchDataAsync();
+    Console.WriteLine(result); // Outputs "Data fetched"
+}
+```
+
+---
+
+### **Benefits of TAP:**
+- Improves responsiveness (e.g., in UI applications).
+- Simplifies error handling with try-catch.
+- Scales well for I/O-bound and CPU-bound operations.
+
+#### **Common Scenarios for TAP:**
+- File I/O (e.g., reading/writing files asynchronously).
+- Network operations (e.g., making HTTP requests).
+- Database queries (e.g., querying data asynchronously).
+
+By mastering these concepts, you can write robust and efficient asynchronous programs in C#.
+
+
+
+
+
+### 1. **Chaining Tasks by Using Continuation Tasks**
+
+In C#, you can chain tasks using **continuation tasks**, where one task executes after another completes. This is useful for performing sequential operations or handling results from a previous task.
+
+#### **Key Methods for Task Chaining:**
+- `Task.ContinueWith`: Specifies the next task to run after the current one finishes.
+- `await` (preferred in modern C#): Simplifies chaining by awaiting tasks sequentially.
+
+#### **Example: Using `ContinueWith` for Task Chaining**
+
+```csharp
+public void ChainTasksWithContinueWith()
+{
+    Task.Run(() => 
+    {
+        Console.WriteLine("Task 1: Starting");
+        Task.Delay(1000).Wait(); // Simulate work
+        Console.WriteLine("Task 1: Completed");
+    })
+    .ContinueWith(task => 
+    {
+        Console.WriteLine("Task 2: Starting");
+        Task.Delay(1000).Wait(); // Simulate work
+        Console.WriteLine("Task 2: Completed");
+    });
+}
+```
+
+#### **Using `await` for Task Chaining (Recommended)**
+
+```csharp
+public async Task ChainTasksWithAwaitAsync()
+{
+    Console.WriteLine("Task 1: Starting");
+    await Task.Delay(1000); // Simulate work
+    Console.WriteLine("Task 1: Completed");
+
+    Console.WriteLine("Task 2: Starting");
+    await Task.Delay(1000); // Simulate work
+    Console.WriteLine("Task 2: Completed");
+}
+```
+
+---
+
+### 2. **How to Attach Child Tasks to a Parent Task in C#**
+
+In C#, you can create **parent-child task hierarchies**, where a parent task can wait for its child tasks to complete before it finishes.
+
+#### **Key Method: `Task.Factory.StartNew` with `TaskCreationOptions.AttachedToParent`**
+
+```csharp
+public void AttachChildTasksToParent()
+{
+    var parentTask = Task.Factory.StartNew(() =>
+    {
+        Console.WriteLine("Parent task started");
+
+        var childTask1 = Task.Factory.StartNew(() =>
+        {
+            Console.WriteLine("Child task 1 started");
+            Task.Delay(1000).Wait(); // Simulate work
+            Console.WriteLine("Child task 1 completed");
+        }, TaskCreationOptions.AttachedToParent);
+
+        var childTask2 = Task.Factory.StartNew(() =>
+        {
+            Console.WriteLine("Child task 2 started");
+            Task.Delay(2000).Wait(); // Simulate work
+            Console.WriteLine("Child task 2 completed");
+        }, TaskCreationOptions.AttachedToParent);
+
+    });
+
+    parentTask.Wait(); // Wait for parent and all attached child tasks to complete
+    Console.WriteLine("Parent task completed");
+}
+```
+
+---
+
+### 3. **ValueTask in C#**
+
+`ValueTask` is a lightweight alternative to `Task` introduced to optimize scenarios where the result of an asynchronous operation is either:
+- Already available synchronously, or
+- Requires asynchronous computation.
+
+#### **Why Use `ValueTask`?**
+- Avoids unnecessary allocations when the result is immediately available.
+- Useful for high-performance applications.
+
+#### **Basic Example of `ValueTask`:**
+
+```csharp
+public ValueTask<int> GetNumberAsync(bool immediate)
+{
+    if (immediate)
+    {
+        return new ValueTask<int>(42); // Synchronous result
+    }
+    else
+    {
+        return new ValueTask<int>(Task.Run(() => 
+        {
+            Task.Delay(1000).Wait(); // Simulate work
+            return 42;
+        }));
+    }
+}
+
+public async Task UseValueTaskAsync()
+{
+    int result = await GetNumberAsync(true); // Immediate result
+    Console.WriteLine($"Result: {result}");
+}
+```
+
+**Note**: Avoid multiple awaits on the same `ValueTask` instance, as it can lead to unexpected behavior.
+
+---
+
+### 4. **How to Cancel a Non-Cancellable Task in C#**
+
+If a task doesn't natively support cancellation via a `CancellationToken`, you can implement a workaround using **timeout** or a combination of manual checks.
+
+#### **Solution: Use `Task.WhenAny` for Timeout**
+
+```csharp
+public async Task CancelNonCancellableTaskAsync()
+{
+    var delayTask = Task.Delay(5000); // Simulate non-cancellable task
+    var timeoutTask = Task.Delay(2000); // Timeout after 2 seconds
+
+    var completedTask = await Task.WhenAny(delayTask, timeoutTask);
+
+    if (completedTask == timeoutTask)
+    {
+        Console.WriteLine("Task timed out");
+    }
+    else
+    {
+        Console.WriteLine("Task completed");
+    }
+}
+```
+
+---
+
+### 5. **Asynchronous Streams in C#**
+
+Asynchronous streams allow you to process data **asynchronously** as it becomes available. Introduced in **C# 8.0**, they use the `IAsyncEnumerable<T>` interface with the `await foreach` loop.
+
+#### **Example: Using Asynchronous Streams**
+
+```csharp
+public async IAsyncEnumerable<int> GenerateNumbersAsync()
+{
+    for (int i = 1; i <= 5; i++)
+    {
+        await Task.Delay(1000); // Simulate delay
+        yield return i;
+    }
+}
+
+public async Task UseAsynchronousStreamsAsync()
+{
+    await foreach (var number in GenerateNumbersAsync())
+    {
+        Console.WriteLine($"Received: {number}");
+    }
+}
+```
+
+---
+
+### 6. **How to Cancel Asynchronous Stream in C#**
+
+To cancel an asynchronous stream, use a `CancellationToken` and pass it to the method returning `IAsyncEnumerable<T>`.
+
+#### **Example: Canceling an Asynchronous Stream**
+
+```csharp
+public async IAsyncEnumerable<int> GenerateNumbersAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
+{
+    for (int i = 1; i <= 10; i++)
+    {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            Console.WriteLine("Cancellation requested");
+            yield break; // Exit the stream
+        }
+
+        await Task.Delay(1000, cancellationToken); // Support cancellation during delay
+        yield return i;
+    }
+}
+
+public async Task UseAsynchronousStreamsWithCancellationAsync()
+{
+    var cts = new CancellationTokenSource();
+    cts.CancelAfter(4000); // Cancel after 4 seconds
+
+    try
+    {
+        await foreach (var number in GenerateNumbersAsync(cts.Token))
+        {
+            Console.WriteLine($"Received: {number}");
+        }
+    }
+    catch (OperationCanceledException)
+    {
+        Console.WriteLine("Stream was canceled");
+    }
+}
+```
+
+---
+
+These topics cover advanced asynchronous programming patterns and techniques in C#, enabling you to write more efficient and flexible code while handling tasks, streams, and cancellation scenarios effectively.
+
+
+
+
+
+Here's a detailed breakdown of the requested topics in C#:
+
+---
+
+### 1. **Task Parallel Library (TPL) in C#**
+
+The **Task Parallel Library (TPL)** is a set of classes and methods in the `System.Threading.Tasks` namespace that simplifies parallel programming. It provides high-level abstractions for creating and managing tasks, making it easier to write scalable and efficient parallel code.
+
+#### **Key Features of TPL**:
+- Uses **`Task`** and **`Task<T>`** for asynchronous and parallel operations.
+- Supports **data parallelism** (e.g., `Parallel.For`, `Parallel.ForEach`).
+- Supports **task parallelism** (e.g., `Task.Run`, `Parallel.Invoke`).
+- Automatic thread management and load balancing.
+
+#### **Example: Simple TPL with Tasks**
+
+```csharp
+public void SimpleTaskExample()
+{
+    Task task1 = Task.Run(() => Console.WriteLine("Task 1"));
+    Task task2 = Task.Run(() => Console.WriteLine("Task 2"));
+
+    Task.WaitAll(task1, task2); // Wait for all tasks to complete
+}
+```
+
+---
+
+### 2. **Parallel For in C#**
+
+`Parallel.For` executes iterations of a `for` loop in parallel, distributing iterations across multiple threads.
+
+#### **Syntax:**
+
+```csharp
+Parallel.For(start, end, action);
+```
+
+#### **Example: Parallel For**
+
+```csharp
+Parallel.For(0, 10, i =>
+{
+    Console.WriteLine($"Iteration {i} running on thread {Thread.CurrentThread.ManagedThreadId}");
+    Thread.Sleep(500); // Simulate work
+});
+```
+
+---
+
+### 3. **Parallel Foreach Loop in C#**
+
+`Parallel.ForEach` processes each item in a collection in parallel.
+
+#### **Syntax:**
+
+```csharp
+Parallel.ForEach(collection, action);
+```
+
+#### **Example: Parallel Foreach**
+
+```csharp
+var data = Enumerable.Range(1, 10).ToList();
+
+Parallel.ForEach(data, item =>
+{
+    Console.WriteLine($"Processing item {item} on thread {Thread.CurrentThread.ManagedThreadId}");
+    Thread.Sleep(500); // Simulate work
+});
+```
+
+---
+
+### 4. **Parallel Invoke in C#**
+
+`Parallel.Invoke` allows you to execute multiple independent actions in parallel.
+
+#### **Example: Parallel Invoke**
+
+```csharp
+Parallel.Invoke(
+    () => Console.WriteLine($"Action 1 on thread {Thread.CurrentThread.ManagedThreadId}"),
+    () => Console.WriteLine($"Action 2 on thread {Thread.CurrentThread.ManagedThreadId}"),
+    () => Console.WriteLine($"Action 3 on thread {Thread.CurrentThread.ManagedThreadId}")
+);
+```
+
+---
+
+### 5. **Maximum Degree of Parallelism in C#**
+
+The **maximum degree of parallelism** controls how many tasks or threads are allowed to run in parallel. This is useful for controlling resource usage.
+
+#### **Example: Set Maximum Degree in Parallel.ForEach**
+
+```csharp
+var data = Enumerable.Range(1, 10).ToList();
+
+var options = new ParallelOptions
+{
+    MaxDegreeOfParallelism = 3 // Limit to 3 threads
+};
+
+Parallel.ForEach(data, options, item =>
+{
+    Console.WriteLine($"Processing item {item} on thread {Thread.CurrentThread.ManagedThreadId}");
+    Thread.Sleep(500); // Simulate work
+});
+```
+
+---
+
+### 6. **How to Cancel Parallel Operations in C#**
+
+You can cancel parallel operations using a **`CancellationToken`**.
+
+#### **Example: Cancel Parallel.ForEach**
+
+```csharp
+var cts = new CancellationTokenSource();
+cts.CancelAfter(2000); // Cancel after 2 seconds
+
+try
+{
+    Parallel.ForEach(Enumerable.Range(1, 10), new ParallelOptions { CancellationToken = cts.Token }, item =>
+    {
+        Console.WriteLine($"Processing item {item}");
+        Thread.Sleep(1000); // Simulate work
+    });
+}
+catch (OperationCanceledException)
+{
+    Console.WriteLine("Operation was canceled.");
+}
+```
+
+---
+
+### 7. **Atomic Methods, Thread Safety, and Race Conditions in C#**
+
+#### **Race Condition**:
+A race condition occurs when multiple threads access shared data simultaneously, leading to unpredictable results.
+
+#### **Thread Safety**:
+Ensures that shared data is accessed in a way that prevents race conditions.
+
+#### **Atomic Operations**:
+Operations that are performed entirely or not at all, without interruption by other threads. The `Interlocked` class provides atomic operations for basic types.
+
+#### **Example: Using `Interlocked` for Thread Safety**
+
+```csharp
+int counter = 0;
+
+Parallel.For(0, 1000, _ =>
+{
+    Interlocked.Increment(ref counter); // Safely increment counter
+});
+
+Console.WriteLine($"Counter value: {counter}");
+```
+
+---
+
+### 8. **Interlocked vs Lock in C#**
+
+- **`Interlocked`**:
+  - Provides thread-safe operations for basic types (`int`, `long`, etc.).
+  - Faster than `lock` because it avoids context switching.
+
+- **`lock`**:
+  - Ensures thread safety for critical sections that involve complex logic or multiple shared variables.
+  - More versatile but can be slower due to thread contention.
+
+#### **Example: `lock` vs `Interlocked`**
+
+```csharp
+int counter = 0;
+object lockObj = new object();
+
+// Using lock
+Parallel.For(0, 1000, _ =>
+{
+    lock (lockObj)
+    {
+        counter++;
+    }
+});
+
+// Using Interlocked
+Parallel.For(0, 1000, _ =>
+{
+    Interlocked.Increment(ref counter);
+});
+```
+
+---
+
+### 9. **Parallel LINQ (PLINQ) in C#**
+
+**PLINQ** (Parallel LINQ) is an extension of LINQ that allows queries to run in parallel, leveraging multiple cores.
+
+#### **Example: Using PLINQ**
+
+```csharp
+var numbers = Enumerable.Range(1, 10).ToList();
+
+var results = numbers.AsParallel()
+                     .WithDegreeOfParallelism(3) // Limit parallelism
+                     .Where(n => n % 2 == 0)
+                     .ToList();
+
+results.ForEach(r => Console.WriteLine($"Result: {r}"));
+```
+
+---
+
+### 10. **Multithreading vs Asynchronous Programming vs Parallel Programming in C#**
+
+| Aspect                     | **Multithreading**                            | **Asynchronous Programming**                 | **Parallel Programming**                     |
+|----------------------------|-----------------------------------------------|---------------------------------------------|---------------------------------------------|
+| **Purpose**                | Execute multiple threads simultaneously.      | Avoid blocking threads for I/O operations. | Perform many computations at the same time. |
+| **Use Case**               | CPU-bound tasks requiring concurrency.        | I/O-bound tasks like file or network I/O.  | Data processing and computational tasks.    |
+| **Threading Model**        | Explicit thread management.                   | Uses tasks (`Task`, `async/await`).        | Uses TPL (`Parallel.For`, `PLINQ`).         |
+| **Example**                | `Thread` or `ThreadPool`.                     | `async/await` for non-blocking code.       | `Parallel.For`, `Parallel.Invoke`.          |
+| **Key Benefit**            | Low-level control over threads.               | Simplified I/O operations.                 | Efficient utilization of CPU cores.         |
+
+---
+
+By understanding these concepts, you can leverage C#'s powerful concurrency and parallelism features effectively to build high-performance applications.
+
+
+**Context switching** refers to the process by which a computer's CPU switches from executing one thread or process to another. This is a fundamental feature of multitasking operating systems that allows multiple tasks to run seemingly simultaneously by sharing CPU time.
+
+### **Key Points about Context Switching**:
+
+1. **Why Context Switching Happens**:
+   - To allow multiple threads or processes to share the CPU.
+   - It occurs when a running thread is paused (preempted) so another thread can run, either because:
+     - The current thread has finished its time slice.
+     - A higher-priority thread needs to run.
+     - The current thread is waiting for I/O or other resources.
+
+2. **Steps in Context Switching**:
+   - **Save the state** of the currently running thread (e.g., registers, program counter, stack).
+   - **Load the state** of the next thread to run.
+   - Switch the CPU to the new thread.
+
+3. **Performance Impact**:
+   - Context switching is not free; it has an **overhead** because saving and restoring thread states takes time.
+   - Frequent context switching can reduce the efficiency of an application, especially in CPU-bound tasks.
+
+4. **Minimizing Context Switching**:
+   - Use **`Task`** and **`async/await`** for non-blocking asynchronous code.
+   - Reduce the number of active threads by setting appropriate **maximum degree of parallelism**.
+   - Use **lock-free** programming techniques (e.g., `Interlocked`).
+
+---
+
+### **Example in C#**:
+In a multithreaded program, context switching happens frequently:
+
+```csharp
+Parallel.For(0, 10, i =>
+{
+    Console.WriteLine($"Task {i} running on thread {Thread.CurrentThread.ManagedThreadId}");
+    Thread.Sleep(100); // Simulate work
+});
+```
+
+Here, the system will switch between threads to execute tasks, and each switch incurs a small delay due to context switching.
+
+---
+
+### **Analogy**:
+Think of context switching like switching between open tabs in a browser. Each time you switch, there’s a slight delay as the browser loads the new tab, similar to how the CPU saves and loads thread states.
+
+
+
+
+
+The `yield` keyword in C# is used in **iterators** to generate elements one at a time, allowing you to iterate through a sequence without creating a full collection in memory. It's especially useful for lazy evaluation, as it provides values on demand.
+
+---
+
+### **Purpose of `yield`**
+- Simplifies the implementation of custom iterators.
+- Improves performance by generating items only when needed.
+- Reduces memory usage by avoiding the need to store an entire collection.
+
+---
+
+### **How `yield` Works**
+The `yield` keyword is used in **enumerable methods** to return one element of a sequence at a time. When a `yield return` statement is executed, the current state of the method is saved, and execution resumes from the same point the next time the iterator is called.
+
+---
+
+### **Key Forms of `yield`**
+
+1. **`yield return`**: Returns a value to the enumerator.
+2. **`yield break`**: Stops the iteration and exits the method.
+
+---
+
+### **Example: Using `yield return`**
+
+```csharp
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        foreach (var number in GetNumbers())
+        {
+            Console.WriteLine(number);
+        }
+    }
+
+    static IEnumerable<int> GetNumbers()
+    {
+        yield return 1;
+        yield return 2;
+        yield return 3;
+    }
+}
+```
+
+#### **Explanation**:
+- `GetNumbers` is an iterator method.
+- Each `yield return` statement pauses the method and provides a value to the calling code.
+- The method resumes from the next `yield return` when the caller requests the next value.
+
+---
+
+### **Example: Using `yield break`**
+
+```csharp
+static IEnumerable<int> GetNumbersUntil(int limit)
+{
+    for (int i = 1; i <= 10; i++)
+    {
+        if (i > limit)
+            yield break; // Stop iteration
+
+        yield return i;
+    }
+}
+```
+
+---
+
+### **Advantages of Using `yield`**
+
+1. **Lazy Evaluation**: Items are generated only as they are needed.
+2. **Simplified Code**: No need to manually implement `IEnumerator` or manage state.
+3. **Reduced Memory Usage**: Avoids loading the entire collection into memory at once.
+
+---
+
+### **When to Use `yield`**
+- When creating custom sequences.
+- When working with large datasets or streams.
+- When you want to delay the computation of elements until they are requested.
+
+---
+
+### **Behind the Scenes**
+When you use `yield`, the C# compiler generates a **state machine** (a class implementing `IEnumerable` and `IEnumerator`) to handle the sequence generation and state management automatically.
+
+---
+
+### **Comparison: `yield` vs Other Techniques**
+
+| Feature              | **`yield`**                  | **List/Array**            | **Manual `IEnumerator`**    |
+|----------------------|------------------------------|---------------------------|-----------------------------|
+| **Performance**      | Lazy, generates on demand    | Requires full allocation  | Manual management required  |
+| **Ease of Use**      | Very simple                  | Simple but uses memory    | Complex implementation      |
+| **Memory Usage**     | Minimal                      | High for large datasets   | Depends on implementation   |
+
+---
+
+### **Common Use Cases**
+1. **Infinite Sequences**:
+   ```csharp
+   static IEnumerable<int> InfiniteNumbers()
+   {
+       int i = 0;
+       while (true)
+       {
+           yield return i++;
+       }
+   }
+   ```
+
+2. **Filtering Data**:
+   ```csharp
+   static IEnumerable<int> GetEvenNumbers(IEnumerable<int> numbers)
+   {
+       foreach (var number in numbers)
+       {
+           if (number % 2 == 0)
+               yield return number;
+       }
+   }
+   ```
+
+3. **Custom Iterations**:
+   ```csharp
+   static IEnumerable<int> GetRange(int start, int count)
+   {
+       for (int i = start; i < start + count; i++)
+       {
+           yield return i;
+       }
+   }
+   ```
+
+---
+
+### **Conclusion**
+The `yield` keyword is a powerful feature in C# for creating lazy, efficient, and elegant sequences. It simplifies the development of iterators and is widely used in data processing, filtering, and custom collections.
+
+
+Sure! Let’s break down the **`yield`** keyword in C# with a simple, real-life analogy and easy-to-understand explanations.
+
+---
+
+### What is `yield`?  
+The **`yield`** keyword helps you give one piece of data at a time, instead of handing over everything at once. Think of it as a way to “pause” and “resume” a method while returning items one by one.
+
+---
+
+### **Analogy: Delivering Cookies One by One**
+
+Imagine you’re baking cookies for a group of friends. Instead of baking all the cookies first and serving them together, you:
+1. Bake one cookie.
+2. Serve it to a friend.
+3. Bake the next cookie.
+4. Serve it to the next friend.
+
+This way, your friends don’t have to wait for all the cookies to be ready—they get one as soon as it’s baked. The **`yield`** keyword works like this: it “bakes” one piece of data at a time and gives it to the caller.
+
+---
+
+### Example in Simple Words  
+
+Let’s say you have a function that generates numbers from 1 to 3. Without `yield`, you’d typically generate all the numbers at once, like this:
+
+```csharp
+List<int> GetNumbers()
+{
+    return new List<int> { 1, 2, 3 };
+}
+```
+
+With **`yield`**, you can return one number at a time without storing all the numbers in a list:
+
+```csharp
+IEnumerable<int> GetNumbers()
+{
+    yield return 1;  // Give 1 and pause here
+    yield return 2;  // Then give 2 and pause here
+    yield return 3;  // Finally, give 3 and stop
+}
+```
+
+---
+
+### **How Does it Work?**
+
+1. When you call `GetNumbers()`, nothing happens immediately.  
+2. As you loop through the result (e.g., using `foreach`), the method runs until it hits the first `yield return`.  
+3. It “pauses” and gives the caller the value.  
+4. When the caller asks for the next value, the method continues where it left off.
+
+---
+
+### Real-Life Example of `yield`
+
+Here’s a simple program:
+
+```csharp
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        foreach (var number in GetNumbers())
+        {
+            Console.WriteLine(number); // Numbers will be printed one at a time
+        }
+    }
+
+    static IEnumerable<int> GetNumbers()
+    {
+        Console.WriteLine("Yielding 1");
+        yield return 1;
+
+        Console.WriteLine("Yielding 2");
+        yield return 2;
+
+        Console.WriteLine("Yielding 3");
+        yield return 3;
+    }
+}
+```
+
+#### Output:
+```
+Yielding 1
+1
+Yielding 2
+2
+Yielding 3
+3
+```
+
+**Explanation**:
+- `GetNumbers` gives one number at a time (`yield return`).
+- The program doesn’t compute all the numbers upfront—it does it **on demand**.
+
+---
+
+### Why Use `yield`?  
+
+1. **Efficiency**: Instead of generating a large list, you generate and process items one by one. This saves memory and time.
+   
+2. **On-Demand Data**: Useful when you only need a few items from a large dataset (e.g., reading lines from a big file).
+
+3. **Simplicity**: It makes your code easier to read and maintain compared to manually writing code to store and manage data.
+
+---
+
+### Layman Summary
+
+Think of **`yield`** as a way to serve things in **small portions** rather than delivering everything at once. It’s like saying, “Here’s the first piece; hold on while I get the next one.” This makes things more efficient and flexible, especially when working with large data or complex operations.
+
+
