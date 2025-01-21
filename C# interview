@@ -1,0 +1,941 @@
+
+
+Generics in C# allow you to define classes, methods, and data structures with a placeholder for data types. This enables you to write more flexible and reusable code. Instead of defining a class or method for every possible data type, generics allow you to define one class or method that works with any type.
+
+### Key Benefits of Generics:
+- **Type Safety:** You can define data types at compile-time, avoiding runtime errors due to type mismatches.
+- **Reusability:** The same code can be used for different data types without duplicating code.
+- **Performance:** Since there is no boxing/unboxing (for value types), performance is better than using `object`.
+
+### Syntax
+To define a generic type, you use angle brackets (`<T>`) to specify a placeholder for the data type.
+
+### Example: Generic Method
+
+```csharp
+using System;
+
+public class GenericExample
+{
+    // Generic method that swaps two values
+    public static void Swap<T>(ref T first, ref T second)
+    {
+        T temp = first;
+        first = second;
+        second = temp;
+    }
+
+    public static void Main(string[] args)
+    {
+        int a = 5, b = 10;
+        Console.WriteLine($"Before swap: a = {a}, b = {b}");
+
+        // Calling the generic Swap method with int type
+        Swap(ref a, ref b);
+        Console.WriteLine($"After swap: a = {a}, b = {b}");
+
+        string x = "Hello", y = "World";
+        Console.WriteLine($"Before swap: x = {x}, y = {y}");
+
+        // Calling the generic Swap method with string type
+        Swap(ref x, ref y);
+        Console.WriteLine($"After swap: x = {x}, y = {y}");
+    }
+}
+```
+
+### Explanation:
+- The `Swap<T>` method is generic. The placeholder `T` can be any type (like `int`, `string`, etc.).
+- The `Swap` method swaps the values of two variables of the same type. 
+- By using `ref`, the method directly modifies the original variables.
+- In the `Main` method, we call `Swap` for both `int` and `string` types, demonstrating the reusability of the generic method.
+
+### Example: Generic Class
+
+```csharp
+using System;
+
+public class GenericList<T>
+{
+    private T[] items = new T[10];
+    private int count = 0;
+
+    public void Add(T item)
+    {
+        if (count < 10)
+        {
+            items[count] = item;
+            count++;
+        }
+    }
+
+    public void Display()
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Console.WriteLine(items[i]);
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // Creating a generic list of integers
+        GenericList<int> intList = new GenericList<int>();
+        intList.Add(1);
+        intList.Add(2);
+        intList.Add(3);
+        intList.Display(); // Displays: 1 2 3
+
+        // Creating a generic list of strings
+        GenericList<string> stringList = new GenericList<string>();
+        stringList.Add("Hello");
+        stringList.Add("World");
+        stringList.Display(); // Displays: Hello World
+    }
+}
+```
+
+### Explanation:
+- `GenericList<T>` is a generic class where `T` is a placeholder for any data type.
+- It has methods like `Add` (to add an item) and `Display` (to print the list).
+- In the `Main` method, the `GenericList` is instantiated with both `int` and `string` types, showcasing how a generic class can handle multiple types.
+
+### Conclusion:
+Generics in C# allow you to write flexible, reusable, and type-safe code by using placeholders for data types. This reduces the need for duplicating code for different types and enhances performance.
+
+When working with generics in C#, you can use constraints to impose more specific requirements on the types that can be used with a generic class, method, or delegate. Constraints ensure that the type parameter meets specific criteria, providing more flexibility and safety.
+
+By adding constraints, you can restrict what types can be used with your generics and access more features of the types. This ensures your code is more robust and prevents errors due to type mismatches.
+
+T : struct: Restrict to value types (not null).
+T : class: Restrict to reference types (allows null).
+T : new(): Restrict to types with a parameterless constructor.
+T : BaseClass: Restrict to types that are derived from BaseClass.
+T : IInterface: Restrict to types that implement a specific interface.
+
+
+
+
+### **Extension Methods in C#**
+
+**Extension methods** in C# allow you to "add" new methods to existing types without modifying their source code or creating a new derived type. They are particularly useful when you need to extend the functionality of types from external libraries, frameworks, or system types that you cannot modify directly.
+
+An **extension method** is defined as a static method in a static class, but it is called as if it were an instance method on the type being extended.
+
+### **Syntax of Extension Methods:**
+- An extension method is defined as a `static` method.
+- It must be in a `static` class.
+- The first parameter of the method is the type being extended, and it is prefixed with the `this` keyword.
+
+### **Example of Extension Methods:**
+
+#### 1. **Basic Extension Method:**
+Here’s an example of adding an extension method to the `string` type to reverse its characters.
+
+```csharp
+using System;
+
+public static class StringExtensions
+{
+    // Extension method to reverse a string
+    public static string ReverseString(this string str)
+    {
+        char[] charArray = str.ToCharArray();
+        Array.Reverse(charArray);
+        return new string(charArray);
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        string message = "Hello, World!";
+        
+        // Using the extension method as if it were a built-in method
+        string reversedMessage = message.ReverseString();
+        
+        Console.WriteLine(reversedMessage);  // Output: "!dlroW ,olleH"
+    }
+}
+```
+
+#### **Explanation:**
+- The `ReverseString` method is an extension method that operates on the `string` type. It takes `string str` as its first parameter, which is the type being extended.
+- The `this` keyword in front of `string str` indicates that this is an extension method for `string`.
+- The `ReverseString` method can now be called on any instance of `string`, as though it were a member of the `string` class.
+
+### **How Extension Methods Work:**
+1. **Static Method:** Though it’s defined in a static class, the extension method appears as if it were an instance method on the type being extended.
+2. **Compiler Magic:** When you call an extension method, the compiler translates it into a call to the static method, passing the object as the first parameter.
+
+### **2. Example with LINQ and Collections:**
+The most common use of extension methods in C# is in **LINQ** (Language Integrated Query). LINQ methods, such as `Where`, `Select`, `OrderBy`, etc., are all extension methods defined in the `System.Linq` namespace.
+
+Here’s an example of how we can create our own extension methods for collections:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public static class ListExtensions
+{
+    // Custom extension method to find the second largest number in a list
+    public static int? SecondLargest(this List<int> numbers)
+    {
+        if (numbers == null || numbers.Count < 2)
+            return null;
+        
+        var sortedNumbers = numbers.Distinct().OrderByDescending(x => x).ToList();
+        return sortedNumbers.Count > 1 ? sortedNumbers[1] : (int?)null;
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        List<int> numbers = new List<int> { 10, 20, 20, 30, 40 };
+
+        // Using the custom extension method
+        int? secondLargest = numbers.SecondLargest();
+        Console.WriteLine($"Second largest number: {secondLargest}");  // Output: 30
+    }
+}
+```
+
+#### **Explanation:**
+- The `SecondLargest` method is an extension method that operates on `List<int>`.
+- It uses LINQ's `Distinct` and `OrderByDescending` methods to find the second-largest number in a list.
+- The method can now be called directly on any instance of `List<int>`, making it easier to use and more readable.
+
+### **3. Extension Methods with LINQ:**
+
+Here’s an example of how extension methods are commonly used in LINQ for querying collections.
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        List<int> numbers = new List<int> { 1, 3, 5, 7, 9, 11 };
+
+        // Using LINQ extension methods
+        var evenNumbers = numbers.Where(n => n % 2 == 0);
+        Console.WriteLine("Even numbers:");
+        foreach (var num in evenNumbers)
+        {
+            Console.WriteLine(num);  // Output: (none, as there are no even numbers)
+        }
+    }
+}
+```
+
+#### **Explanation:**
+- The `Where` method is an extension method defined in `System.Linq` for filtering collections.
+- It can be called on any `IEnumerable<T>`, which is why we can use it directly on `numbers` (a `List<int>`).
+- LINQ extension methods like `Where`, `Select`, `OrderBy`, etc., are commonly used for functional-style programming in C#.
+
+### **4. Example: Extension Methods with Nullable Types:**
+
+You can also create extension methods for nullable types, such as `int?`, to simplify operations.
+
+```csharp
+using System;
+
+public static class NullableExtensions
+{
+    // Extension method to check if a nullable integer has a value greater than a threshold
+    public static bool IsGreaterThan(this int? number, int threshold)
+    {
+        return number.HasValue && number.Value > threshold;
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        int? number = 5;
+
+        // Using the extension method to check if the nullable number is greater than 3
+        bool result = number.IsGreaterThan(3);
+        Console.WriteLine($"Is the number greater than 3? {result}");  // Output: True
+    }
+}
+```
+
+#### **Explanation:**
+- The `IsGreaterThan` method is an extension method for the nullable `int?` type.
+- It allows us to call this method on nullable integers (e.g., `int?`) to check whether the value is greater than a given threshold, simplifying the syntax.
+
+### **Important Considerations:**
+
+1. **Extension Methods are Resolved at Compile Time:**
+   - The compiler resolves extension methods at compile time, meaning that if there’s an ambiguity (e.g., two extension methods with the same signature), it will result in a compilation error.
+
+2. **Extension Methods Don't Modify the Original Type:**
+   - Even though extension methods appear to add new functionality to types, they do not modify the original type. They’re just syntactic sugar.
+
+3. **Extension Methods are Accessible via `using` Directives:**
+   - To use an extension method, you need to include the namespace where the extension method is defined.
+
+4. **Extension Methods in LINQ:**
+   - Many of LINQ’s methods, like `Select`, `Where`, `Aggregate`, etc., are extension methods for `IEnumerable<T>`. Therefore, any object that implements `IEnumerable<T>` can use these LINQ methods.
+
+### **Limitations of Extension Methods:**
+1. **No Access to Private Members:**  
+   - Extension methods cannot access private or protected members of the class being extended. They only have access to the public interface of the type.
+   
+2. **Overriding Existing Methods:**  
+   - Extension methods cannot override or replace existing methods in the class. They can only add new methods that don’t conflict with the existing ones.
+
+3. **Method Resolution Ambiguity:**  
+   - If you create an extension method with the same name and signature as an existing method in the class, the extension method might not be invoked, causing ambiguity.
+
+### **Summary:**
+- Extension methods are a powerful feature in C# that allow you to add functionality to existing types without modifying their source code.
+- They are defined in static classes and can be used as if they are instance methods of the type being extended.
+- Extension methods are widely used in LINQ, making collections and data manipulation more expressive and easier to use.
+
+
+
+
+
+In C#, both **abstract classes** and **interfaces** are used to define common functionality and provide a way to enforce certain contracts that implementing classes must follow. However, they have key differences in how they are used, and understanding these differences helps you decide when to use one over the other.
+
+### **Key Differences Between an Abstract Class and an Interface**
+
+| Feature                    | **Abstract Class**                                      | **Interface**                                      |
+|----------------------------|---------------------------------------------------------|-----------------------------------------------------|
+| **Purpose**                 | An abstract class is used when you want to share common functionality among related classes, and you also want to provide a common base class with some implementation. | An interface is used to define a contract that classes must adhere to, without specifying any implementation details. |
+| **Implementation**          | Can have both abstract (no implementation) and concrete (with implementation) methods. | Can only have method signatures (without implementation) until C# 8.0, which introduced default interface methods. |
+| **Fields**                  | Can have fields (instance or static fields).            | Cannot have fields, only method signatures and properties. |
+| **Access Modifiers**        | Can have access modifiers (e.g., `private`, `protected`, `public`) for methods, fields, and properties. | Members are implicitly `public`, and cannot have access modifiers. |
+| **Multiple Inheritance**    | A class can inherit only one abstract class.            | A class can implement multiple interfaces (C# allows multiple inheritance of interfaces). |
+| **Constructor**             | Can have constructors, which can be called in derived classes. | Cannot have constructors. |
+| **Inheritance**             | An abstract class can inherit from another class (abstract or not). | An interface cannot inherit from a class, only from other interfaces. |
+| **Use Case**                | Use abstract classes when you have a base class that should provide some shared functionality, and you want to force subclasses to implement other abstract methods. | Use interfaces when you need to define a contract that classes should implement, but you don’t need to provide any shared implementation. |
+| **Versioning**              | You can add new methods with implementations in abstract classes without breaking existing code. | Adding new methods to an interface will break existing code unless you use default methods (C# 8.0+). |
+
+### **When to Use an Abstract Class:**
+
+1. **Shared Implementation Across Classes:** 
+   - Use an abstract class when you want to share code (i.e., common method implementations) among multiple related classes, but also want to leave certain methods abstract for the derived classes to implement.
+   - Example: If you have a base class that contains logic for most of your methods, but you want derived classes to implement specific details.
+
+   ```csharp
+   public abstract class Animal
+   {
+       public void Eat()
+       {
+           Console.WriteLine("Eating...");
+       }
+
+       public abstract void MakeSound();  // Abstract method that must be implemented by derived class
+   }
+
+   public class Dog : Animal
+   {
+       public override void MakeSound()
+       {
+           Console.WriteLine("Bark");
+       }
+   }
+   ```
+
+2. **Single Inheritance Hierarchy:**
+   - If you need to represent a **"is-a"** relationship (e.g., a `Dog` **is a** `Animal`), an abstract class can be used since C# allows only **single inheritance** for classes.
+
+3. **Need to Provide Constructors:**
+   - Abstract classes can have constructors, which are called by derived classes. This is useful when you need to initialize shared state or provide common setup.
+
+4. **Default Implementation for Some Methods:**
+   - If you want to provide some default implementation of methods that derived classes can use or override, an abstract class is ideal.
+   
+   ```csharp
+   public abstract class Shape
+   {
+       public abstract void Draw();
+
+       public void Move()  // Concrete method with default implementation
+       {
+           Console.WriteLine("Moving...");
+       }
+   }
+   ```
+
+### **When to Use an Interface:**
+
+1. **Defining a Contract Without Implementation:**
+   - Use an interface when you want to define a contract (a set of methods) that other classes must implement, but you do not want to provide any default implementation.
+   
+   ```csharp
+   public interface IDriveable
+   {
+       void Drive();  // Only the signature, no implementation
+   }
+
+   public class Car : IDriveable
+   {
+       public void Drive()
+       {
+           Console.WriteLine("Driving a car...");
+       }
+   }
+   ```
+
+2. **Multiple Inheritance of Behavior:**
+   - Since a class can implement multiple interfaces in C#, interfaces are useful when you want a class to inherit behavior from more than one source. This is important if you want to mix different sets of functionality in a single class.
+   
+   ```csharp
+   public interface IWritable
+   {
+       void Write();
+   }
+
+   public interface IReadable
+   {
+       void Read();
+   }
+
+   public class Document : IWritable, IReadable
+   {
+       public void Write() { Console.WriteLine("Writing..."); }
+       public void Read() { Console.WriteLine("Reading..."); }
+   }
+   ```
+
+3. **Loose Coupling:**
+   - Use interfaces to achieve **loose coupling** between classes. By coding to an interface rather than a concrete class, you can change the implementation without affecting the dependent code.
+   
+4. **Supporting Multiple Implementations:**
+   - When different classes need to implement the same set of behaviors but have different implementations, interfaces allow you to enforce this structure.
+
+5. **Versioning:** 
+   - If you anticipate needing to add more methods in the future, interfaces (prior to C# 8.0) can be more difficult to extend, but starting with C# 8.0, you can define **default methods** within interfaces. Even so, it’s still often better to use abstract classes for extensibility.
+
+### **Example Scenario for Choosing Between an Abstract Class and an Interface:**
+
+#### **Abstract Class Use Case:**
+You are building a base class for different types of vehicles (`Car`, `Truck`, `Motorcycle`), where common functionality like starting the engine, stopping the engine, etc., will be shared, but the specific implementation for each vehicle type may differ (e.g., how the engine is started).
+
+```csharp
+public abstract class Vehicle
+{
+    public abstract void StartEngine();  // Abstract method, implementation differs for each vehicle
+    
+    public void StopEngine()  // Shared method, common for all vehicles
+    {
+        Console.WriteLine("Engine stopped");
+    }
+}
+
+public class Car : Vehicle
+{
+    public override void StartEngine()
+    {
+        Console.WriteLine("Car engine started");
+    }
+}
+```
+
+#### **Interface Use Case:**
+You are building a system where various objects (such as `Printer`, `Scanner`, `FaxMachine`) need to support **printing** functionality, but the actual implementation of how printing happens will differ for each object.
+
+```csharp
+public interface IPrintable
+{
+    void Print();  // Only the contract, no implementation
+}
+
+public class Printer : IPrintable
+{
+    public void Print()
+    {
+        Console.WriteLine("Printing document...");
+    }
+}
+```
+
+### **Summary:**
+- **Use an abstract class** when you want to share code between classes, provide default implementations, or require a common base with shared functionality.
+- **Use an interface** when you want to define a contract that multiple classes must adhere to, without imposing any implementation details.
+
+In general:
+- **Abstract Class**: **Single inheritance** and **shared implementation**.
+- **Interface**: **Multiple inheritance** and **defining a contract**.
+
+
+
+In C#, a **static class** is a class that cannot be instantiated and is intended to contain only static members (methods, properties, fields, events). The primary purpose of static classes is to group related functionality that does not require any instance-specific behavior.
+
+### **Key Characteristics of a Static Class:**
+
+1. **Cannot Be Instantiated:**
+   - You cannot create an object of a static class. For example, `new MyStaticClass()` will result in a compile-time error.
+   - Static classes are designed to provide functionality that is global or related to a specific task, rather than something that needs to be tied to an object.
+
+2. **Only Static Members:**
+   - All members (fields, properties, methods, etc.) of a static class must be static. This means they belong to the class itself, rather than an instance of the class.
+   - Static members are accessed using the class name, not through an instance.
+
+3. **No Constructors:**
+   - A static class cannot have an instance constructor. However, it can have a **static constructor** (also known as a type initializer) to initialize static members or perform other setup tasks.
+
+4. **Cannot Inherit or Be Inherited:**
+   - A static class cannot be inherited or used as a base class for other classes.
+   - Other classes can, however, implement interfaces in a static class.
+
+### **When and Why to Use Static Classes:**
+
+1. **Utility or Helper Methods:**
+   - Static classes are commonly used to define utility methods or helper methods that do not need to maintain any state (e.g., mathematical operations, file handling, logging, etc.).
+   
+   For example, `Math` is a static class in .NET:
+
+   ```csharp
+   public static class MathUtilities
+   {
+       public static int Add(int a, int b) => a + b;
+       public static int Subtract(int a, int b) => a - b;
+   }
+   ```
+
+   You can call methods from the `MathUtilities` class without creating an instance of it:
+   
+   ```csharp
+   int result = MathUtilities.Add(5, 10);  // No need to create an object
+   ```
+
+2. **Shared State or Global Data:**
+   - If you need to store and access global data or shared state that should be consistent across the entire application, a static class can be used to hold that state. This could be things like configuration settings, application-wide constants, or service containers.
+   
+   ```csharp
+   public static class Config
+   {
+       public static string AppName = "My Application";
+       public static string Version = "1.0.0";
+   }
+   ```
+
+   You can access this configuration globally without needing to pass around an instance:
+
+   ```csharp
+   string appName = Config.AppName;  // No instance needed
+   ```
+
+3. **Singleton Pattern:**
+   - The **Singleton** design pattern can be implemented using a static class when you want to ensure only a single instance of a class exists. In cases where you don't need an actual object but just a global access point for a resource, a static class is a good choice.
+
+   ```csharp
+   public static class Singleton
+   {
+       private static readonly Lazy<Singleton> _instance = new Lazy<Singleton>(() => new Singleton());
+
+       public static Singleton Instance => _instance.Value;
+
+       private Singleton() { }  // Private constructor to prevent instantiation
+   }
+   ```
+
+4. **Performance Considerations:**
+   - Since static classes don't require instantiation, they can save memory and resources. This is useful for scenarios where creating objects is unnecessary, and the class is meant to provide shared, stateless functionality (like logging or math operations).
+
+5. **Global Access to Methods:**
+   - Static classes provide a convenient way to access methods that don't rely on instance-specific data. For example, logging or data formatting tools that are used throughout an application can be put into a static class.
+
+6. **Thread Safety for Static Members:**
+   - Static classes can be used in multi-threaded applications if the static members are properly managed to ensure thread safety. For example, when maintaining global data that needs to be accessed by different threads, static classes can ensure that the data is consistent.
+
+### **Example of Static Class:**
+
+```csharp
+using System;
+
+public static class Logger
+{
+    // Static method to log messages
+    public static void Log(string message)
+    {
+        Console.WriteLine($"{DateTime.Now}: {message}");
+    }
+
+    // Static property to manage logging level
+    public static string LogLevel { get; set; } = "INFO";
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        // Accessing static method and property
+        Logger.Log("This is a log message.");
+        Console.WriteLine("Current Log Level: " + Logger.LogLevel);
+    }
+}
+```
+
+#### **Explanation:**
+- The `Logger` class is static, meaning we cannot create instances of `Logger`.
+- We access its static members (methods and properties) using the class name (`Logger.Log` and `Logger.LogLevel`).
+- There’s no need for an instance of `Logger`, as the class is intended for global functionality.
+
+### **When Not to Use Static Classes:**
+
+1. **When You Need to Maintain State:**
+   - If the class needs to maintain state specific to an instance (i.e., different values for different objects), a static class is not appropriate. Instead, use regular classes.
+   
+2. **When You Need Polymorphism or Inheritance:**
+   - Static classes cannot be inherited, so if you need to define behavior that should be inherited or overridden by subclasses, use a regular class or interface.
+
+3. **When You Need to Implement Interfaces:**
+   - Static classes cannot implement interfaces. If you need your class to follow a certain contract (interface), then a static class would not be suitable.
+
+### **Summary:**
+A static class is useful when:
+- You need to group methods and data that are global and do not rely on instance-specific behavior.
+- You don’t need to create instances of the class.
+- You are implementing utility or helper methods, managing global state, or implementing patterns like Singleton.
+
+Use a static class when its functionality does not require instantiation, inheritance, or maintaining instance-level state. For everything else, use a regular class.
+
+
+
+
+**Reflection** in C# is a powerful feature that allows you to inspect and interact with the metadata of assemblies, types, methods, properties, fields, and other components of your application at runtime. It provides the ability to dynamically discover information about types and members, and to invoke members or create instances of types without knowing them at compile time.
+
+Reflection is commonly used for:
+- Discovering information about types, methods, properties, and fields at runtime.
+- Dynamically invoking methods.
+- Creating instances of types dynamically.
+- Inspecting and modifying the metadata of an assembly or type.
+
+### **Key Uses of Reflection:**
+1. **Inspecting Types:** Get information about the structure of types (classes, interfaces, enums, etc.).
+2. **Dynamically Creating Objects:** Create objects of a type at runtime without knowing the exact type in advance.
+3. **Invoking Methods Dynamically:** Call methods on an object or type without knowing the method name at compile time.
+4. **Accessing Private Members:** Access private fields, properties, or methods, even if they are not publicly accessible.
+5. **Examining Attributes:** Check for custom attributes applied to types, methods, or properties.
+
+### **Basic Concepts in Reflection:**
+- **`Type` Class:** Provides methods to get metadata about a type.
+- **`MethodInfo`, `PropertyInfo`, `FieldInfo`, etc.:** Used to get detailed information about methods, properties, and fields.
+- **`Activator` Class:** Allows you to create instances of types dynamically.
+
+### **Reflection Example in C#:**
+
+Let's create a real-world example to demonstrate how reflection works in C#. In this example, we'll create a simple class, use reflection to inspect its properties, and invoke a method dynamically.
+
+### **Example:**
+
+```csharp
+using System;
+using System.Reflection;
+
+public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+
+    private string PrivateData = "Private Info";
+
+    public void Greet()
+    {
+        Console.WriteLine($"Hello, my name is {Name} and I am {Age} years old.");
+    }
+
+    private void PrintPrivateData()
+    {
+        Console.WriteLine(PrivateData);
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        // 1. Use Reflection to get Type info
+        Type personType = typeof(Person);
+
+        // 2. Get the properties of the class
+        PropertyInfo[] properties = personType.GetProperties();
+        Console.WriteLine("Properties of Person class:");
+        foreach (var prop in properties)
+        {
+            Console.WriteLine($"- {prop.Name} ({prop.PropertyType})");
+        }
+
+        // 3. Get the methods of the class
+        MethodInfo[] methods = personType.GetMethods();
+        Console.WriteLine("\nMethods of Person class:");
+        foreach (var method in methods)
+        {
+            Console.WriteLine($"- {method.Name}");
+        }
+
+        // 4. Create an instance of the Person class dynamically using reflection
+        object personInstance = Activator.CreateInstance(personType);
+
+        // 5. Set properties dynamically
+        PropertyInfo nameProperty = personType.GetProperty("Name");
+        PropertyInfo ageProperty = personType.GetProperty("Age");
+
+        nameProperty.SetValue(personInstance, "John Doe");
+        ageProperty.SetValue(personInstance, 30);
+
+        // 6. Invoke the public method 'Greet' dynamically
+        MethodInfo greetMethod = personType.GetMethod("Greet");
+        greetMethod.Invoke(personInstance, null);  // No parameters
+
+        // 7. Access private method 'PrintPrivateData' using reflection
+        MethodInfo privateMethod = personType.GetMethod("PrintPrivateData", BindingFlags.NonPublic | BindingFlags.Instance);
+        privateMethod.Invoke(personInstance, null);  // No parameters
+    }
+}
+```
+
+### **Explanation of the Code:**
+
+1. **Getting Type Information:**
+   - `Type personType = typeof(Person);` retrieves the `Type` object for the `Person` class. This allows us to access metadata about the class at runtime.
+
+2. **Getting Properties:**
+   - `personType.GetProperties()` returns an array of `PropertyInfo` objects that represent the public properties of the `Person` class. We loop through this array and print the name and type of each property.
+
+3. **Getting Methods:**
+   - `personType.GetMethods()` returns an array of `MethodInfo` objects that represent the methods of the `Person` class. We loop through and print the names of all methods.
+
+4. **Creating an Instance Dynamically:**
+   - `Activator.CreateInstance(personType)` creates an instance of the `Person` class at runtime, without using the `new` keyword. This allows us to dynamically instantiate types.
+
+5. **Setting Property Values:**
+   - We use `PropertyInfo.SetValue()` to set the values of the `Name` and `Age` properties dynamically on the `personInstance`.
+
+6. **Invoking Methods Dynamically:**
+   - `MethodInfo.Invoke()` is used to call the `Greet` method dynamically on the `personInstance`. This method doesn't require knowing the method name at compile time.
+
+7. **Accessing Private Members:**
+   - We use `BindingFlags.NonPublic | BindingFlags.Instance` to access the private `PrintPrivateData` method. This allows us to invoke a private method using reflection.
+
+### **Output:**
+
+```
+Properties of Person class:
+- Name (System.String)
+- Age (System.Int32)
+
+Methods of Person class:
+- ToString
+- Equals
+- GetHashCode
+- GetType
+- Greet
+- PrintPrivateData
+
+Hello, my name is John Doe and I am 30 years old.
+Private Info
+```
+
+### **Key Points:**
+- **Reflection** allows you to examine the structure of types, their properties, methods, and fields at runtime.
+- **Reflection** can be used for dynamic method invocation, accessing private members, or creating objects without knowing their types at compile time.
+- **Performance Consideration:** Reflection can be slower than direct code, so it should be used judiciously, particularly in performance-sensitive code.
+
+### **Common Use Cases for Reflection:**
+
+1. **Plugin Architectures:** Reflection is often used to load and interact with plugins or assemblies dynamically, where the types are not known at compile time.
+2. **Serialization/Deserialization:** Libraries like `JSON.NET` use reflection to inspect types and convert objects to and from JSON without needing explicit code for each class.
+3. **Unit Testing:** Reflection is used in test frameworks to dynamically find and run test methods.
+4. **Code Generation:** Reflection can be used to generate code or perform operations that are determined at runtime.
+
+Reflection is a powerful tool, but it should be used with care, as it comes with performance overhead and can compromise type safety.
+
+
+
+
+In C#, both the **Equality Operator (`==`)** and the **`Equals()` method** are used to compare two objects for equality, but they work in different ways and have different use cases. Here’s a breakdown of their differences and when each should be used:
+
+### 1. **Equality Operator (`==`):**
+
+- **Definition:** The `==` operator is used to compare two operands to check if they are equal. Its behavior can vary depending on the types being compared (value types or reference types).
+
+- **Default Behavior for Value Types:** For value types (such as `int`, `double`, `struct`), the `==` operator compares the actual values of the operands.
+  
+  ```csharp
+  int x = 5;
+  int y = 5;
+  Console.WriteLine(x == y);  // Output: True
+  ```
+
+- **Default Behavior for Reference Types:** For reference types (such as classes), the `==` operator compares the **memory address** (reference) of the objects, not their content.
+  
+  ```csharp
+  string s1 = "hello";
+  string s2 = "hello";
+  Console.WriteLine(s1 == s2);  // Output: True (in this case, because of string interning)
+  ```
+
+  However, if you are comparing instances of a class and not strings, it will compare references by default.
+
+  ```csharp
+  MyClass obj1 = new MyClass();
+  MyClass obj2 = new MyClass();
+  Console.WriteLine(obj1 == obj2);  // Output: False (because they are different objects)
+  ```
+
+- **Operator Overloading:** You can **override** the `==` operator in custom classes to define what equality means in that class. This is done by overloading the `==` operator.
+
+  ```csharp
+  public class Point
+  {
+      public int X { get; set; }
+      public int Y { get; set; }
+
+      public static bool operator ==(Point p1, Point p2)
+      {
+          return p1.X == p2.X && p1.Y == p2.Y;
+      }
+
+      public static bool operator !=(Point p1, Point p2)
+      {
+          return !(p1 == p2);
+      }
+
+      // Always override Equals and GetHashCode if you override ==
+      public override bool Equals(object obj)
+      {
+          if (obj is Point other)
+              return this.X == other.X && this.Y == other.Y;
+          return false;
+      }
+
+      public override int GetHashCode()
+      {
+          return X.GetHashCode() ^ Y.GetHashCode();
+      }
+  }
+  ```
+
+---
+
+### 2. **`Equals()` Method:**
+
+- **Definition:** The `Equals()` method is a method defined in the `Object` class (which all types inherit from) and is used to check whether two objects are equal.
+
+- **Default Behavior for Reference Types:** The default implementation of `Equals()` (in the `Object` class) compares object **references**, similar to the `==` operator for reference types.
+  
+  ```csharp
+  MyClass obj1 = new MyClass();
+  MyClass obj2 = new MyClass();
+  Console.WriteLine(obj1.Equals(obj2));  // Output: False (because they are different objects)
+  ```
+
+- **Default Behavior for Value Types:** For value types, `Equals()` compares the actual values, similar to the behavior of the `==` operator.
+  
+  ```csharp
+  int x = 5;
+  int y = 5;
+  Console.WriteLine(x.Equals(y));  // Output: True
+  ```
+
+- **Override in Custom Classes:** You can **override** the `Equals()` method in a class to define custom equality logic, like you would with the `==` operator.
+
+  ```csharp
+  public class Point
+  {
+      public int X { get; set; }
+      public int Y { get; set; }
+
+      public override bool Equals(object obj)
+      {
+          if (obj is Point other)
+              return this.X == other.X && this.Y == other.Y;
+          return false;
+      }
+
+      public override int GetHashCode()
+      {
+          return X.GetHashCode() ^ Y.GetHashCode();
+      }
+  }
+  ```
+
+---
+
+### **Key Differences:**
+
+| Feature               | **Equality Operator (`==`)**                     | **`Equals()` Method**                            |
+|-----------------------|-------------------------------------------------|-------------------------------------------------|
+| **Default Behavior**   | Compares values for value types and references for reference types. | Compares references for reference types and values for value types. |
+| **Custom Behavior**    | Can be overloaded for custom classes to define equality. | Can be overridden for custom classes to define equality. |
+| **Null Comparisons**   | Can throw a `NullReferenceException` if not handled properly. | Safely handles `null` checks (returns `false` for `null` comparisons). |
+| **Use Case**           | Use for comparing simple equality or when working with types that support `==` (like strings). | Use when comparing complex equality, especially for reference types or custom classes. |
+| **Performance**        | Can be more efficient for value types and string comparisons. | Can be slower for reference types due to virtual method dispatch. |
+
+### **When to Use Each:**
+
+- **Use `==` when:**
+  - You need a simple comparison of **value types** or **string comparisons** (since `==` for strings has special handling).
+  - You want to perform equality checks that are based on the default behavior or a custom operator overload.
+
+- **Use `Equals()` when:**
+  - You want a more general-purpose equality check, especially for **reference types**.
+  - You need to override equality checks to define complex equality logic for custom classes.
+  - You want to compare objects that may be `null` (since `Equals()` handles null gracefully).
+  
+### **Example of Overriding Both `==` and `Equals()` in a Class:**
+
+```csharp
+public class Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    // Overload == operator
+    public static bool operator ==(Point p1, Point p2)
+    {
+        if (ReferenceEquals(p1, null) && ReferenceEquals(p2, null)) return true;
+        if (ReferenceEquals(p1, null) || ReferenceEquals(p2, null)) return false;
+        return p1.X == p2.X && p1.Y == p2.Y;
+    }
+
+    // Overload != operator
+    public static bool operator !=(Point p1, Point p2)
+    {
+        return !(p1 == p2);
+    }
+
+    // Override Equals
+    public override bool Equals(object obj)
+    {
+        if (obj is Point other)
+            return this.X == other.X && this.Y == other.Y;
+        return false;
+    }
+
+    // Override GetHashCode
+    public override int GetHashCode()
+    {
+        return X.GetHashCode() ^ Y.GetHashCode();
+    }
+}
+```
+
+This way, both `==` and `Equals()` will provide the same behavior, and you can use either based on your preference.
+
+
+
+
+
+
+
+
